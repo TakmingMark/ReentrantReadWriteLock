@@ -21,7 +21,7 @@ public class ThreadPoolModel {
 		executor=new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 	}
 	
-	public static ThreadPoolModel getThreadPoolModelObject(int corePoolSize,int maximumPoolSize,long keepAliveTime) {
+	public static ThreadPoolModel getThreadPoolModelObject(int maximumPoolSize,long keepAliveTime) {
 		return new ThreadPoolModel(maximumPoolSize, keepAliveTime);
 	}
 	

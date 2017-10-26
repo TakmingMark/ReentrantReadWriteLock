@@ -6,7 +6,7 @@ import java.net.Socket;
 
 import com.sun.glass.ui.TouchInputSupport;
 
-public class Server {
+public class ServerModel {
 
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
@@ -14,21 +14,22 @@ public class Server {
 	private DataOutputStream socketOutput = null;
 	private int ListenPort;
 	 
-	private Server(int ListenPort,ThreadPoolModel threadPool) {
+	private ServerModel(int ListenPort,ThreadPoolModel threadPool) {
 		this.ListenPort=ListenPort;
 		initServerSocket();
 	}
 	
-	public static Server getServerObject(int ListenPort,ThreadPoolModel threadPool) {
+	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool) {
 		
-		return new Server(ListenPort,threadPool);
+		return new ServerModel(ListenPort,threadPool);
 	}
 	
 	private void initServerSocket() {
 		 try{
 			 	serverSocket = new ServerSocket( ListenPort );
 			 	printContentMsg("Server listening requests..."+"\r\n");
-		          	
+		         
+			 	//發生lock地方
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
 		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
@@ -54,41 +55,8 @@ public class Server {
 	}
 	
 	public void printContentMsg(String msg) {
-		
+		System.out.println(msg);
 	}
 }
 	
-	class ServerRunnable implements Runnable{
-		private Socket clientSocket=null;
-		private DataInputStream socketInput=null;
-		private String inputMsg="",outputMsg="";
-		private int heartBeatTime=30;
-		
-		public ServerRunnable(Socket clientSocket){
-			try {
-				this.clientSocket=clientSocket;
-				this.clientSocket.setSoTimeout(60000);
-				socketInput=new DataInputStream(this.clientSocket.getInputStream());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
-		 
-		@Override
-		public void run(){
-			try{
-				while((inputMsg=socketInput.readUTF())!=null){
-					printContentMsg(inputMsg+"\r\n");
-					}
-					
-				}
-			catch(Exception e){
-				
-			}
-		}
-		
-		private void printContentMsg(String msg) {
-			
-		}
-}
+

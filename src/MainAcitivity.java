@@ -1,9 +1,28 @@
 
 public class MainAcitivity {
 	public static void main(String args[]) {
-		View view=View.getViewObject();
-		int N = Runtime.getRuntime().availableProcessors();
+		MainAcitivity mainAcitivity=new MainAcitivity();
+		mainAcitivity.initPattern();
 		
-		System.out.println(N);
+		
+//		mainAcitivity.initServer();  在這直接呼叫是沒問題的
 	}
+	
+	public void initPattern() {
+		PatternView patternView=PatternView.getPatternViewObject();
+		PatternModel patternModel=PatternModel.getPatternModelObject();
+		PatternController patternController=PatternController.getPatternControllerObject(this,patternView, patternModel);
+	}
+	
+	public void initServer() {
+		ServerView serverView=ServerView.getPatternViewObject();
+		ThreadPoolModel threadPoolModel=ThreadPoolModel.getThreadPoolModelObject(4, 60000);
+		ServerModel serverModel=ServerModel.getServerObject(5050,threadPoolModel); //發生位置的地方
+		ServerContorller serverContorller=ServerContorller.getServerContorllerObject(serverView, serverModel);
+	}
+	
+	public void initClient() {
+		
+	}
+
 }

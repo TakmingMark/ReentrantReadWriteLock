@@ -9,19 +9,19 @@ import javax.swing.LayoutStyle;
 
 import oracle.jrockit.jfr.JFR;
 
-public class View {
+public class ReadWriteLockView {
 	public JFrame jFrame;
 	public JPanel jPanel;
 	public JTextArea jTextArea;
 	public JButton readButton,cancelReadButton,writeButton,cancelWriteButton;
 	
 	public JButton btn1,btn2,btn3,btn4;
-	private View() {	
+	private ReadWriteLockView() {	
 		initView();
 	}
 	
-	public static View getViewObject() {
-		return new View();
+	public static ReadWriteLockView getViewObject() {
+		return new ReadWriteLockView();
 	}
 	
 	private void initView() {
