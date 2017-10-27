@@ -2,14 +2,15 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-class ServerRunnable implements Runnable{
+class ServerThreadModel implements Runnable{
 	private Socket clientSocket=null;
 	private DataInputStream socketInput=null;
 	private String inputMsg="";
 	private int heartBeatTime=30;
 	
-	public ServerRunnable(Socket clientSocket){
+	public ServerThreadModel(Socket clientSocket){
 		try {
+			printContentMsg("have");
 			this.clientSocket=clientSocket;
 			this.clientSocket.setSoTimeout(60000);
 			socketInput=new DataInputStream(this.clientSocket.getInputStream());
@@ -32,6 +33,6 @@ class ServerRunnable implements Runnable{
 	}
 	
 	private void printContentMsg(String msg) {
-		
+		System.out.println(msg);
 	}
 }

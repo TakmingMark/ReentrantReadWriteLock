@@ -16,6 +16,7 @@ public class ServerModel {
 	 
 	private ServerModel(int ListenPort,ThreadPoolModel threadPool) {
 		this.ListenPort=ListenPort;
+		this.threadPool=threadPool;
 		initServerSocket();
 	}
 	
@@ -33,7 +34,7 @@ public class ServerModel {
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
 		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
-		      		threadPool.executeThreadPool(new ServerRunnable(clientSocket));
+		      		threadPool.executeThreadPool(new ServerThreadModel(clientSocket));
 	            }
 		 	}
 	    catch ( IOException e ){
@@ -41,7 +42,7 @@ public class ServerModel {
 	        printContentMsg("Server failed to start,whether the "+ListenPort+" port has been occupied?");
 	    }
 	    finally{
-	        if ( threadPool.isWorkThreadPoolExecutor()==false )
+	        if ( threadPool.isWorkThreadPoolExecutor()!=false )
 	        	threadPool.shutdown();
 	        if ( serverSocket != null )
 	            try{

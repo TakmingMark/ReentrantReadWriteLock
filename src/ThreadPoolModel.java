@@ -12,8 +12,7 @@ public class ThreadPoolModel {
 	private TimeUnit unit;
 	private BlockingQueue<Runnable> workQueue;
 	
-	private ThreadPoolModel(int maximumPoolSize,long keepAliveTime) {
-		
+	private ThreadPoolModel(int maximumPoolSize,long keepAliveTime) {	
 		int corePoolSize=Runtime.getRuntime().availableProcessors();
 		unit=TimeUnit.MILLISECONDS;
 		workQueue= new ArrayBlockingQueue<Runnable>(50);

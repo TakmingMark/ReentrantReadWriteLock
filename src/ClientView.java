@@ -9,19 +9,18 @@ import javax.swing.LayoutStyle;
 
 import oracle.jrockit.jfr.JFR;
 
-public class ReadWriteLockView {
+public class ClientView {
 	public JFrame jFrame;
 	public JPanel jPanel;
 	public JTextArea jTextArea;
 	public JButton readButton,cancelReadButton,writeButton,cancelWriteButton;
 	
-	public JButton btn1,btn2,btn3,btn4;
-	private ReadWriteLockView() {	
+	private ClientView() {	
 		initView();
 	}
 	
-	public static ReadWriteLockView getViewObject() {
-		return new ReadWriteLockView();
+	public static ClientView getClientViewObject() {
+		return new ClientView();
 	}
 	
 	private void initView() {
@@ -93,40 +92,5 @@ public class ReadWriteLockView {
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void initView1() {
-		jFrame=new JFrame("ReentrantReakWriteLock");
-		jPanel=new JPanel();
 	
-		btn1=new JButton("btn1");
-		btn2=new JButton("btn2");
-		btn3=new JButton("btn3");
-		btn4=new JButton("btn4");
-		
-		jFrame.setLocation(300, 300);
-		
-		jPanel.setPreferredSize(new Dimension(350, 300));
-
-		GroupLayout groupLayout=new GroupLayout(jPanel);
-		jPanel.setLayout(groupLayout);
-	
-		groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-				.addComponent(btn1)
-				.addComponent(btn2)
-				.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(btn3)
-						.addComponent(btn4)));
-		
-		groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
-				.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						.addComponent(btn1)
-						.addComponent(btn2)
-						.addComponent(btn3))
-				.addComponent(btn4));
-		
-		
-		jFrame.add(jPanel);
-		jFrame.pack();
-		jFrame.setVisible(true);
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
 }

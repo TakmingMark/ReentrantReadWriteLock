@@ -22,7 +22,8 @@ public class MainAcitivity {
 	}
 	
 	public void initClient() {
-		
+		ClientView clientView=ClientView.getClientViewObject();
+		ClientModel clientModel=ClientModel.getClientModelObject("163.19.227.78",5050);
 	}
 
 }

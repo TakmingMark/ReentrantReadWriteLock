@@ -34,7 +34,8 @@ public class PatternController {
 			mainAcitivity.initServer();
 		}
 		else if(pattern.equals("Client")) {
-			
+			patternView.close();
+			mainAcitivity.initClient();
 		}
 	}
 }
