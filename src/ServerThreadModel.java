@@ -1,6 +1,7 @@
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 class ServerThreadModel implements Runnable{
 	private Socket clientSocket=null;
@@ -27,9 +28,13 @@ class ServerThreadModel implements Runnable{
 				printContentMsg(inputMsg+"\r\n");
 				}
 			}
+		catch (SocketException e) {
+			e.printStackTrace();
+		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+		
 	}
 	
 	private void printContentMsg(String msg) {

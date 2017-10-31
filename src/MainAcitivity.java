@@ -15,9 +15,11 @@ public class MainAcitivity {
 	}
 	
 	public void initServer() {
-		ServerView serverView=ServerView.getPatternViewObject();
+		ServerView serverView=ServerView.getServerViewObject();
 		ThreadPoolModel threadPoolModel=ThreadPoolModel.getThreadPoolModelObject(4, 60000);
 		ServerModel serverModel=ServerModel.getServerObject(5050,threadPoolModel); //發生位置的地方
+		Thread serverModelThread =new Thread(serverModel);
+		serverModelThread.start();
 		ServerContorller serverContorller=ServerContorller.getServerContorllerObject(serverView, serverModel);
 	}
 	

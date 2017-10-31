@@ -6,7 +6,7 @@ import java.net.Socket;
 
 import com.sun.glass.ui.TouchInputSupport;
 
-public class ServerModel {
+public class ServerModel implements Runnable{
 
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
@@ -14,10 +14,14 @@ public class ServerModel {
 	private DataOutputStream socketOutput = null;
 	private int ListenPort;
 	 
+	@Override
+	public void run() {
+		initServerSocket();
+	}
+	
 	private ServerModel(int ListenPort,ThreadPoolModel threadPool) {
 		this.ListenPort=ListenPort;
 		this.threadPool=threadPool;
-		initServerSocket();
 	}
 	
 	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool) {

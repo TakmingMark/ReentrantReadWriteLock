@@ -15,7 +15,7 @@ public class ServerView {
 		initView();
 	}
 	
-	public static ServerView getPatternViewObject() {
+	public static ServerView getServerViewObject() {
 		return new ServerView();
 	}	
 		
