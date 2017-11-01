@@ -59,6 +59,7 @@ public class ServerModel implements Runnable{
 
 	}
 	
+
 	public void printContentMsg(String msg) {
 		System.out.println(msg);
 	}

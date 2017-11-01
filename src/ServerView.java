@@ -4,13 +4,18 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
 
 public class ServerView {
-	public JFrame jFrame;
-	public JPanel jPanel;
-	public JTextArea jTextArea;
+	private JFrame jFrame;
+	private JPanel jPanel;
+	private JTextArea jTextArea;
+	private JScrollPane jScrollPane;
+	
 	private ServerView() {	
 		initView();
 	}
@@ -22,10 +27,14 @@ public class ServerView {
 	private void initView() {
 		jFrame=new JFrame("Server");
 		jPanel=new JPanel();
-		jTextArea=new JTextArea();
-		jFrame.setLocation(300, 300);
-		
+		jTextArea=new JTextArea(13,23);
+		jScrollPane=new JScrollPane(jTextArea);
+
 		jPanel.setPreferredSize(new Dimension(350, 300));
+		
+		jTextArea.setFont(jTextArea.getFont().deriveFont(16f));
+		jTextArea.setEditable(false);
+		jFrame.setLocation(300, 300);
 		
 		GroupLayout groupLayout=new GroupLayout(jPanel);
 		jPanel.setLayout(groupLayout);
@@ -34,7 +43,7 @@ public class ServerView {
 				groupLayout.createSequentialGroup()
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(jTextArea,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+				.addComponent(jScrollPane,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				);
@@ -44,7 +53,7 @@ public class ServerView {
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addGroup(groupLayout.createParallelGroup()
-						.addComponent(jTextArea,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE))
+						.addComponent(jScrollPane,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				);

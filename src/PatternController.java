@@ -11,44 +11,34 @@ public class PatternController {
 	PatternView patternView;
 	PatternModel patternModel;
 	
-	private PatternController(MainAcitivity mainAcitivity,PatternView patternView,PatternModel patternModel) {
-		this.mainAcitivity=mainAcitivity;
+	private PatternController(PatternView patternView,PatternModel patternModel) {
 		this.patternView=patternView;
 		this.patternModel=patternModel;
 		initPatternController();
 	}
 	
-	public static PatternController getPatternControllerObject(MainAcitivity mainAcitivity,PatternView patternView,PatternModel patternModel) {
-		return new PatternController(mainAcitivity,patternView,patternModel);
+	public static PatternController getPatternControllerObject(PatternView patternView,PatternModel patternModel) {
+		return new PatternController(patternView,patternModel);
 	}
 	
 	private void initPatternController() {
-		PatternAction patternAction=new PatternAction(this);
+		PatternAction patternAction=new PatternAction(patternModel);
 		patternView.setClientButtonListner(patternAction);
 		patternView.setServerButtonListener(patternAction);
 	}
 	
-	public void conversionController(String pattern) {
-		if(pattern.equals("Server")) {
-			patternView.close();
-			mainAcitivity.initServer();
-		}
-		else if(pattern.equals("Client")) {
-			patternView.close();
-			mainAcitivity.initClient();
-		}
-	}
+	
 }
 class PatternAction implements ActionListener{
 
-	PatternController patternController;
-	public PatternAction(PatternController patternController) {
-		this.patternController=patternController;
+	PatternModel patternModel;
+	public PatternAction(PatternModel patternModel) {
+		this.patternModel=patternModel;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		patternController.conversionController(e.getActionCommand());
+		patternModel.conversionController(e.getActionCommand());
 	}
 	
 }

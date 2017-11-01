@@ -4,14 +4,12 @@ public class MainAcitivity {
 		MainAcitivity mainAcitivity=new MainAcitivity();
 		mainAcitivity.initPattern();
 		
-		
-//		mainAcitivity.initServer();  在這直接呼叫是沒問題的
 	}
 	
 	public void initPattern() {
 		PatternView patternView=PatternView.getPatternViewObject();
-		PatternModel patternModel=PatternModel.getPatternModelObject();
-		PatternController patternController=PatternController.getPatternControllerObject(this,patternView, patternModel);
+		PatternModel patternModel=PatternModel.getPatternModelObject(this,patternView);
+		PatternController patternController=PatternController.getPatternControllerObject(patternView, patternModel);
 	}
 	
 	public void initServer() {
@@ -25,7 +23,8 @@ public class MainAcitivity {
 	
 	public void initClient() {
 		ClientView clientView=ClientView.getClientViewObject();
-		ClientModel clientModel=ClientModel.getClientModelObject("163.19.227.78",5050);
+		ClientModel clientModel=ClientModel.getClientModelObject(clientView,"163.19.227.78",5050);
+		ClientController clientController=ClientController.getClientControllerObject(clientView, clientModel);
 	}
 
 }

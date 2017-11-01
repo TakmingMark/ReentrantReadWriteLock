@@ -15,6 +15,7 @@ public class ClientView {
 	public JTextArea jTextArea;
 	public JButton readButton,cancelReadButton,writeButton,cancelWriteButton;
 	
+	boolean readButtonStatus=false,cancelReadButtonStatus=false,writeButtonStatus=false,cancelWriteButtonStatus=false;
 	private ClientView() {	
 		initView();
 	}
@@ -32,6 +33,8 @@ public class ClientView {
 		writeButton=new JButton("Write");
 		cancelWriteButton=new JButton("CancelWrite");
 		
+		cancelReadButton.setEnabled(false);
+		cancelWriteButton.setEnabled(false);
 		jFrame.setLocation(300, 300);
 		
 		jPanel.setPreferredSize(new Dimension(350, 300));
@@ -92,5 +95,48 @@ public class ClientView {
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	public void setReadButtonListener(ClientAction readAction) {
+		readButton.addActionListener(readAction);
+	}
+	
+	public void setCancelReadButtonListener(ClientAction cancelReadAction) {
+		cancelReadButton.addActionListener(cancelReadAction);
+	}
+	
+	public void setWriteButtonListener(ClientAction writeAction) {
+		writeButton.addActionListener(writeAction);
+	}
+	
+	public void setCancelWriteButtonListener(ClientAction cancelWriteAction) {
+		cancelWriteButton.addActionListener(cancelWriteAction);
+	}
+	
+	public void setReadButtonStatus() {
+		readButton.setEnabled(false);
+		cancelReadButton.setEnabled(true);
+		writeButton.setEnabled(false);
+		cancelWriteButton.setEnabled(false);
+	}
+	
+	public void setCancelReadButtonStatus() {
+		readButton.setEnabled(true);
+		cancelReadButton.setEnabled(false);
+		writeButton.setEnabled(true);
+		cancelWriteButton.setEnabled(false);
+	}
+	
+	public void setWriteButtonStatus() {
+		readButton.setEnabled(false);
+		cancelReadButton.setEnabled(false);
+		writeButton.setEnabled(false);
+		cancelWriteButton.setEnabled(true);
+	}
+	
+	public void setCancelWriteButtonStatus() {
+		readButton.setEnabled(true);
+		cancelReadButton.setEnabled(false);
+		writeButton.setEnabled(true);
+		cancelWriteButton.setEnabled(false);
+	}
 	
 }

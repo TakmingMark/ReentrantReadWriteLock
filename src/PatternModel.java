@@ -2,12 +2,25 @@ import javax.print.attribute.standard.RequestingUserName;
 
 public class PatternModel {
 
+	MainAcitivity mainAcitivity;
 	PatternView patternView;
-	private PatternModel() {
-		
+	private PatternModel(MainAcitivity mainAcitivity,PatternView patternView) {
+		this.mainAcitivity=mainAcitivity;
+		this.patternView=patternView;
 	}
 	
-	public static PatternModel getPatternModelObject() {
-		return new PatternModel();
+	public static PatternModel getPatternModelObject(MainAcitivity mainAcitivity,PatternView patternView) {
+		return new PatternModel(mainAcitivity,patternView);
+	}
+	
+	public void conversionController(String pattern) {
+		if(pattern.equals("Server")) {
+			patternView.close();
+			mainAcitivity.initServer();
+		}
+		else if(pattern.equals("Client")) {
+			patternView.close();
+			mainAcitivity.initClient();
+		}
 	}
 }
