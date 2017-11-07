@@ -1,9 +1,9 @@
+import java.util.List;
 
 public class MainAcitivity {
 	public static void main(String args[]) {
 		MainAcitivity mainAcitivity=new MainAcitivity();
 		mainAcitivity.initPattern();
-		
 	}
 	
 	public void initPattern() {
@@ -16,8 +16,8 @@ public class MainAcitivity {
 		ServerView serverView=ServerView.getServerViewObject();
 		ThreadPoolModel threadPoolModel=ThreadPoolModel.getThreadPoolModelObject(4, 60000);
 		ServerModel serverModel=ServerModel.getServerObject(5050,threadPoolModel); //發生位置的地方
-		Thread serverModelThread =new Thread(serverModel);
-		serverModelThread.start();
+		Thread serverModelProcess =new Thread(serverModel);
+		serverModelProcess.start();
 		ServerContorller serverContorller=ServerContorller.getServerContorllerObject(serverView, serverModel);
 	}
 	
@@ -26,5 +26,4 @@ public class MainAcitivity {
 		ClientModel clientModel=ClientModel.getClientModelObject(clientView,"163.19.227.78",5050);
 		ClientController clientController=ClientController.getClientControllerObject(clientView, clientModel);
 	}
-
 }

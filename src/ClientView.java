@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 
-import oracle.jrockit.jfr.JFR;
 
 public class ClientView {
 	public JFrame jFrame;
@@ -15,7 +14,6 @@ public class ClientView {
 	public JTextArea jTextArea;
 	public JButton readButton,cancelReadButton,writeButton,cancelWriteButton;
 	
-	boolean readButtonStatus=false,cancelReadButtonStatus=false,writeButtonStatus=false,cancelWriteButtonStatus=false;
 	private ClientView() {	
 		initView();
 	}

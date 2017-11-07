@@ -11,7 +11,9 @@ public class ServerModel implements Runnable{
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
 	private Socket clientSocket=null; 
+	private String clientIP;
 	private DataOutputStream socketOutput = null;
+	private UserList<String, DataOutputStream> userList;
 	private int ListenPort;
 	 
 	@Override
@@ -22,6 +24,7 @@ public class ServerModel implements Runnable{
 	private ServerModel(int ListenPort,ThreadPoolModel threadPool) {
 		this.ListenPort=ListenPort;
 		this.threadPool=threadPool;
+		initServerModel();
 	}
 	
 	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool) {
@@ -29,16 +32,21 @@ public class ServerModel implements Runnable{
 		return new ServerModel(ListenPort,threadPool);
 	}
 	
+	private void initServerModel() {
+		userList=new UserList<String, DataOutputStream>();
+	}
+	
 	private void initServerSocket() {
 		 try{
 			 	serverSocket = new ServerSocket( ListenPort );
 			 	printContentMsg("Server listening requests..."+"\r\n");
 		         
-			 	//發生lock地方
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
+	            	clientIP=clientSocket.getInetAddress().toString();
 		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
-		      		threadPool.executeThreadPool(new ServerThreadModel(clientSocket));
+		      		threadPool.executeThreadPool(ServerThreadModel.getServerThreadModelObject(clientSocket));
+		      		userList.addUser(clientIP, socketOutput);
 	            }
 		 	}
 	    catch ( IOException e ){

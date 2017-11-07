@@ -1,4 +1,6 @@
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -18,7 +20,10 @@ public class ClientModel {
 	private ClientView clientView;
 	private String IPAddress;
 	private int ListenPort;
+	
+	private Thread clientThreadModel;
 	private Socket clientSocket=null;
+	private DataOutputStream socketOutput;
 	
 	private final ReadWriteLock readWriteLock=new ReentrantReadWriteLock();
 	private final Lock readLock=readWriteLock.readLock();
@@ -37,15 +42,15 @@ public class ClientModel {
 	
 	private void initClientSocket() {
 		try {
-			clientSocket=new Socket(IPAddress,ListenPort);
-			clientSocket.setSoTimeout(300000);
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			clientSocket=new Socket(IPAddress, ListenPort);
+			socketOutput=new DataOutputStream(clientSocket.getOutputStream());
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		clientThreadModel=new Thread(ClientThreadModel.getClientThreadModelObject(clientSocket));
+	
 		printContentMsg("Client connect..."+"\r\n");
 	}
 	
@@ -63,6 +68,12 @@ public class ClientModel {
 	
 	private void pressReadButton() {
 		clientView.setReadButtonStatus();
+		try {
+			socketOutput.writeUTF("test");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void pressCancelReadButton() {
@@ -80,4 +91,5 @@ public class ClientModel {
 	public void printContentMsg(String msg) {
 		System.out.println(msg);
 	}
+
 }
