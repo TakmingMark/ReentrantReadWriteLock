@@ -8,19 +8,20 @@ import java.net.UnknownHostException;
 public class ClientThreadModel implements Runnable{
 
 	private Socket clientSocket=null;
+	private ClientView clientView=null;
 	private String IPAddress="";
 	public int listenPort=0;
 	private DataInputStream socketInput=null;
 	private String inputMsg="";
 	
-	private ClientThreadModel(Socket clientSocket) {
+	private ClientThreadModel(Socket clientSocket,ClientView clientView) {
 		this.clientSocket=clientSocket;
+		this.clientView=clientView;
 		initClientThreadModel();
 	}
 	
-	public static ClientThreadModel getClientThreadModelObject(Socket clientSocket) {
-		
-		return new ClientThreadModel(clientSocket);
+	public static ClientThreadModel getClientThreadModelObject(Socket clientSocket,ClientView clientView) {
+		return new ClientThreadModel(clientSocket,clientView);
 	}
 	
 	private  void initClientThreadModel() {
@@ -45,7 +46,8 @@ public class ClientThreadModel implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
 	private void printContentMsg(String msg) {
-		System.out.println(msg);
+		clientView.updatejTextArea(msg+"\r\n");
 	}
 }

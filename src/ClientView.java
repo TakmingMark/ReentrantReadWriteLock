@@ -137,4 +137,8 @@ public class ClientView {
 		cancelWriteButton.setEnabled(false);
 	}
 	
+	public void updatejTextArea(String inputMsg) {
+		jTextArea.append(inputMsg);
+	}
+	
 }

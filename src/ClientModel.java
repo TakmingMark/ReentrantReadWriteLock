@@ -49,7 +49,7 @@ public class ClientModel {
 			e.printStackTrace();
 		}
 		
-		clientThreadModel=new Thread(ClientThreadModel.getClientThreadModelObject(clientSocket));
+		clientThreadModel=new Thread(ClientThreadModel.getClientThreadModelObject(clientSocket,clientView));
 	
 		printContentMsg("Client connect..."+"\r\n");
 	}

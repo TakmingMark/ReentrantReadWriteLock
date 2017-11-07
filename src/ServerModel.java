@@ -10,6 +10,7 @@ public class ServerModel implements Runnable{
 
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
+	private ServerView serverView;
 	private Socket clientSocket=null; 
 	private String clientIP;
 	private DataOutputStream socketOutput = null;
@@ -21,15 +22,16 @@ public class ServerModel implements Runnable{
 		initServerSocket();
 	}
 	
-	private ServerModel(int ListenPort,ThreadPoolModel threadPool) {
+	private ServerModel(int ListenPort,ThreadPoolModel threadPool,ServerView serverView) {
 		this.ListenPort=ListenPort;
 		this.threadPool=threadPool;
+		this.serverView=serverView;
 		initServerModel();
 	}
 	
-	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool) {
+	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool,ServerView serverView) {
 		
-		return new ServerModel(ListenPort,threadPool);
+		return new ServerModel(ListenPort,threadPool,serverView);
 	}
 	
 	private void initServerModel() {
@@ -45,7 +47,7 @@ public class ServerModel implements Runnable{
 	            	clientSocket = serverSocket.accept();
 	            	clientIP=clientSocket.getInetAddress().toString();
 		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
-		      		threadPool.executeThreadPool(ServerThreadModel.getServerThreadModelObject(clientSocket));
+		      		threadPool.executeThreadPool(ServerThreadModel.getServerThreadModelObject(clientSocket,serverView));
 		      		userList.addUser(clientIP, socketOutput);
 	            }
 		 	}

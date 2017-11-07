@@ -3,21 +3,21 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 
-import com.sun.org.apache.xml.internal.security.Init;
-
 class ServerThreadModel implements Runnable{
 	private Socket clientSocket=null;
+	private ServerView serverView=null;
 	private DataInputStream socketInput=null;
 	private String inputMsg="";
 	private int heartBeatTime=30;
 	
-	private ServerThreadModel(Socket clientSocket){
+	private ServerThreadModel(Socket clientSocket,ServerView serverView){
 		this.clientSocket=clientSocket;
+		this.serverView=serverView;
 		initServerThreadModel();
     }
 	
-	public static ServerThreadModel getServerThreadModelObject(Socket clientSocket) {
-		return new ServerThreadModel(clientSocket);
+	public static ServerThreadModel getServerThreadModelObject(Socket clientSocket,ServerView serverView) {
+		return new ServerThreadModel(clientSocket,serverView);
 	}
 	
 	private void initServerThreadModel() {
@@ -47,6 +47,8 @@ class ServerThreadModel implements Runnable{
 	}
 	
 	private void printContentMsg(String msg) {
-		System.out.println(msg);
+		serverView.updatejTextArea(msg+"\r\n");
 	}
+
+	
 }
