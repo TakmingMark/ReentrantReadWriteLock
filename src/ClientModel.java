@@ -25,10 +25,6 @@ public class ClientModel {
 	private Socket clientSocket=null;
 	private DataOutputStream socketOutput;
 	
-	private final ReadWriteLock readWriteLock=new ReentrantReadWriteLock();
-	private final Lock readLock=readWriteLock.readLock();
-	private final Lock writeLock=readWriteLock.writeLock();
-	
 	private ClientModel(ClientView clientView,String IPAddress,int ListenPort) {
 		this.clientView=clientView;
 		this.IPAddress=IPAddress;
