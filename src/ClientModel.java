@@ -13,15 +13,17 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 
+import com.sun.tracing.dtrace.ProviderAttributes;
 import com.sun.xml.internal.ws.db.glassfish.BridgeWrapper;
 
-public class ClientModel {
+public class ClientModel implements Observer{
 
 	private ClientView clientView;
 	private String IPAddress;
 	private int ListenPort;
 	
-	private Thread clientThreadModel;
+	private ClientThreadModel clientThreadModel;
+	private Thread clientThread;
 	private Socket clientSocket=null;
 	private DataOutputStream socketOutput;
 	
@@ -45,47 +47,62 @@ public class ClientModel {
 			e.printStackTrace();
 		}
 		
-		clientThreadModel=new Thread(ClientThreadModel.getClientThreadModelObject(clientSocket,clientView));
-	
-		printContentMsg("Client connect..."+"\r\n");
+		clientThreadModel=ClientThreadModel.getClientThreadModelObject(clientSocket);
+		clientThreadModel.attach(this,Architecture.Model);
+		clientThreadModel.attach(clientView,Architecture.View);
+		clientThread=new Thread(clientThreadModel);
+		clientThread.start();
 	}
 	
 	public void buttonClick(String clickEvent) {
 		System.out.println(clickEvent);
-		if(clickEvent.equals("Read"))
+		if(clickEvent.equals(ReadWirteState.Read.toString()))
 			pressReadButton();
-		else if(clickEvent.equals("CancelRead"))
+		else if(clickEvent.equals(ReadWirteState.CancelRead.toString()))
 			pressCancelReadButton();
-		else if(clickEvent.equals("Write")) 
+		else if(clickEvent.equals(ReadWirteState.Write.toString())) 
 			pressWriteButton();
-		else if(clickEvent.equals("CancelWrite"))
+		else if(clickEvent.equals(ReadWirteState.CancelWrite.toString()))
 			pressCancelWriteButton();
 	}
 	
 	private void pressReadButton() {
 		clientView.setReadButtonStatus();
+		transmitMsgBySocket(ReadWirteState.Read.toString());
+	}
+	
+	private void pressCancelReadButton() {
+		clientView.setCancelReadButtonStatus();
+		transmitMsgBySocket(ReadWirteState.CancelRead.toString());
+	}
+	
+	private void pressWriteButton() {
+		clientView.setWriteButtonStatus();
+		transmitMsgBySocket(ReadWirteState.Write.toString());
+	}
+	
+	private void pressCancelWriteButton() {
+		clientView.setCancelWriteButtonStatus();
+		transmitMsgBySocket(ReadWirteState.CancelWrite.toString());
+	}
+	
+	public void printContentMsg(String msg) {
+		System.out.println(msg);
+	}
+
+	public void transmitMsgBySocket(String msg) {
 		try {
-			socketOutput.writeUTF("test");
+			socketOutput.writeUTF(msg+"\r\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private void pressCancelReadButton() {
-		clientView.setCancelReadButtonStatus();
-	}
-	
-	private void pressWriteButton() {
-		clientView.setWriteButtonStatus();
-	}
-	
-	private void pressCancelWriteButton() {
-		clientView.setCancelWriteButtonStatus();
-	}
-	
-	public void printContentMsg(String msg) {
-		System.out.println(msg);
+	@Override
+	public void update(String msg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

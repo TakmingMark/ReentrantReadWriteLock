@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 
 
-public class ClientView {
+public class ClientView implements Observer{
 	public JFrame jFrame;
 	public JPanel jPanel;
 	public JTextArea jTextArea;
@@ -137,8 +137,10 @@ public class ClientView {
 		cancelWriteButton.setEnabled(false);
 	}
 	
-	public void updatejTextArea(String inputMsg) {
-		jTextArea.append(inputMsg);
+	@Override
+	public void update(String msg) {
+		// TODO Auto-generated method stub
+		jTextArea.append(msg);
 	}
 	
 }
