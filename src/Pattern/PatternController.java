@@ -1,3 +1,4 @@
+package Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -5,6 +6,8 @@ import javax.swing.ButtonModel;
 import javax.swing.text.ParagraphView;
 
 import com.sun.corba.se.spi.oa.OADefault;
+
+import Main.MainAcitivity;
 
 public class PatternController {
 	MainAcitivity mainAcitivity;

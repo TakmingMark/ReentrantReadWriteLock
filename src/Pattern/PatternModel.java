@@ -1,4 +1,7 @@
+package Pattern;
 import javax.print.attribute.standard.RequestingUserName;
+
+import Main.MainAcitivity;
 
 public class PatternModel {
 

@@ -1,37 +1,39 @@
-
+package Server;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientThreadModel implements Runnable,Subject{
+import Observer.Observer;
+import Observer.Subject;
+import Protocol.Architecture_Protocol;
+import Protocol.Communcation_Protocol;
 
+class ServerThreadModel implements Runnable,Subject{
 	private Socket clientSocket=null;
-	private Map<Observer, String> observers=null;
-	private String IPAddress="";
-	public int listenPort=0;
+	private HashMap<Observer,String> observers=null;
+	private ServerView serverView=null;
 	private DataInputStream socketInput=null;
 	private String inputMsg="";
+	private int heartBeatTime=30;
 	
-	private ClientThreadModel(Socket clientSocket) {
+	private ServerThreadModel(Socket clientSocket,ServerView serverView){
 		this.clientSocket=clientSocket;
-		initClientThreadModel();
+		this.serverView=serverView;
+		initServerThreadModel();
+    }
+	
+	public static ServerThreadModel getServerThreadModelObject(Socket clientSocket,ServerView serverView) {
+		return new ServerThreadModel(clientSocket,serverView);
 	}
 	
-	public static ClientThreadModel getClientThreadModelObject(Socket clientSocket) {
-		return new ClientThreadModel(clientSocket);
-	}
-	
-	private  void initClientThreadModel() {
+	private void initServerThreadModel() {
 		observers=new HashMap<>();
-		IPAddress=clientSocket.getLocalAddress().getHostAddress();
-		listenPort=clientSocket.getPort();
 		try {
-			socketInput=new DataInputStream(clientSocket.getInputStream());
+			this.clientSocket.setSoTimeout(60000);
+			socketInput=new DataInputStream(this.clientSocket.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,25 +41,26 @@ public class ClientThreadModel implements Runnable,Subject{
 	}
 	
 	@Override
-	public void run() {
-		notifyObserver(Architecture_Protocol.View,"Client connect..."+"\r\n");
+	public void run(){
 		receiveMsgBySocket();
 	}
-	
-	
+
 	private void receiveMsgBySocket() {
-		try {
+		try{
 			while((inputMsg=socketInput.readUTF())!=null){
 				processInputMsg(inputMsg);
+				}
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		catch (SocketException e) {
+			e.printStackTrace();
+		}
+		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
 	private void processInputMsg(String inputMsg) {
-		 String[] tokens = inputMsg.split(":");
+		 String[] tokens = inputMsg.split(Communcation_Protocol.SPLIT_SIGN);
 		 String headProtocol=tokens[0];
 		 String msg=tokens[1];
 		 String rearProtocol=tokens[2];
@@ -131,4 +134,6 @@ public class ClientThreadModel implements Runnable,Subject{
 		    }
 		}
 	}
+
+	
 }

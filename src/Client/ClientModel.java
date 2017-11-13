@@ -1,3 +1,4 @@
+package Client;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,6 +16,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 
 import com.sun.tracing.dtrace.ProviderAttributes;
 import com.sun.xml.internal.ws.db.glassfish.BridgeWrapper;
+
+import Observer.Observer;
+import Protocol.Architecture_Protocol;
+import Protocol.Communcation_Protocol;
+import Protocol.ReadWirteState_Protocol;
 
 public class ClientModel implements Observer{
 

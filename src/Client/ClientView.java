@@ -1,3 +1,4 @@
+package Client;
 import java.awt.Dimension;
 
 import javax.swing.GroupLayout;
@@ -6,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+
+import Observer.Observer;
 
 
 public class ClientView implements Observer{

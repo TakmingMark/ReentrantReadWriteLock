@@ -1,3 +1,4 @@
+package Protocol;
 
 public interface ReadWirteState_Protocol {
 	String READ="READ";

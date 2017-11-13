@@ -1,6 +1,7 @@
+package Observer;
 import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
-interface Observer {
+public interface Observer {
 
 	/**
 	 * provide Subject notify when it state happened change 

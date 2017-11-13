@@ -1,34 +1,43 @@
+package Server;
 import java.awt.Dimension;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
 
-public class PatternView {
-	public JFrame jFrame;
-	public JPanel jPanel;
-	public JButton serverButton,clientButton;
+import Observer.Observer;
+
+public class ServerView implements Observer{
+	private JFrame jFrame;
+	private JPanel jPanel;
+	private JTextArea jTextArea;
+	private JScrollPane jScrollPane;
 	
-	private PatternView() {	
+	private ServerView() {	
 		initView();
 	}
 	
-	public static PatternView getPatternViewObject() {
-		return new PatternView();
+	public static ServerView getServerViewObject() {
+		return new ServerView();
 	}	
 		
 	private void initView() {
-		jFrame=new JFrame("Pattern Option");
+		jFrame=new JFrame("Server");
 		jPanel=new JPanel();
-		serverButton=new JButton("Server");
-		clientButton=new JButton("Client");
-		
-		jFrame.setLocation(300, 300);
-		
+		jTextArea=new JTextArea(13,23);
+		jScrollPane=new JScrollPane(jTextArea);
+
 		jPanel.setPreferredSize(new Dimension(350, 300));
+		
+		jTextArea.setFont(jTextArea.getFont().deriveFont(16f));
+		jTextArea.setEditable(false);
+		jFrame.setLocation(300, 300);
 		
 		GroupLayout groupLayout=new GroupLayout(jPanel);
 		jPanel.setLayout(groupLayout);
@@ -37,10 +46,7 @@ public class PatternView {
 				groupLayout.createSequentialGroup()
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(serverButton,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(clientButton,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+				.addComponent(jScrollPane,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				);
@@ -50,29 +56,25 @@ public class PatternView {
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addGroup(groupLayout.createParallelGroup()
-						.addComponent(serverButton,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
-						.addComponent(clientButton,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE))
+						.addComponent(jScrollPane,0,groupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				);
 		
 		jFrame.add(jPanel);
 		jFrame.pack();
+		jFrame.setFocusable(true);
+		jFrame.setEnabled(true);
 		jFrame.setVisible(true);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void setServerButtonListener(PatternAction severAction) {
-		serverButton.addActionListener(severAction);
-	}
-	
-	public void setClientButtonListner(PatternAction clientAction) {
-		clientButton.addActionListener(clientAction);
+	@Override
+	public void update(String msg) {
+		jTextArea.append(msg+"\r\n");
 	}
 	
 	public void close() {
-		
-		jFrame.setFocusable(false);
 		jFrame.setVisible(false);
 		jFrame.dispose();
 	}

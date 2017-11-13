@@ -1,3 +1,4 @@
+package Protocol;
 import java.nio.channels.ReadableByteChannel;
 
 public interface Communcation_Protocol extends ReadWirteState_Protocol,Architecture_Protocol {

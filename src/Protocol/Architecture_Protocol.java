@@ -1,3 +1,4 @@
+package Protocol;
 
 public interface Architecture_Protocol {
 	String Model="Model";

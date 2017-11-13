@@ -1,5 +1,6 @@
+package Observer;
 
-interface Subject {
+public interface Subject {
 
 	public void attach(Observer observer,String architecture);
 	

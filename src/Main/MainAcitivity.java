@@ -1,4 +1,16 @@
+package Main;
 import java.util.List;
+
+import Client.ClientController;
+import Client.ClientModel;
+import Client.ClientView;
+import Pattern.PatternController;
+import Pattern.PatternModel;
+import Pattern.PatternView;
+import Server.ServerContorller;
+import Server.ServerModel;
+import Server.ServerView;
+import Tools.ThreadPoolModel;
 
 public class MainAcitivity {
 	public static void main(String args[]) {

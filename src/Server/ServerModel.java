@@ -1,3 +1,4 @@
+package Server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -5,6 +6,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.sun.glass.ui.TouchInputSupport;
+
+import Observer.Observer;
+import Protocol.Architecture_Protocol;
+import Tools.ThreadPoolModel;
+import Tools.UserList;
 
 public class ServerModel implements Runnable,Observer{
 
