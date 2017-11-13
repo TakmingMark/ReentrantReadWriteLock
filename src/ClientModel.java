@@ -48,51 +48,47 @@ public class ClientModel implements Observer{
 		}
 		
 		clientThreadModel=ClientThreadModel.getClientThreadModelObject(clientSocket);
-		clientThreadModel.attach(this,Architecture.Model);
-		clientThreadModel.attach(clientView,Architecture.View);
+		clientThreadModel.attach(this,Architecture_Protocol.Model);
+		clientThreadModel.attach(clientView,Architecture_Protocol.View);
 		clientThread=new Thread(clientThreadModel);
 		clientThread.start();
 	}
 	
 	public void buttonClick(String clickEvent) {
 		System.out.println(clickEvent);
-		if(clickEvent.equals(ReadWirteState.Read.toString()))
+		if(clickEvent.equals(ReadWirteState_Protocol.READ))
 			pressReadButton();
-		else if(clickEvent.equals(ReadWirteState.CancelRead.toString()))
+		else if(clickEvent.equals(ReadWirteState_Protocol.CANCEL_READ))
 			pressCancelReadButton();
-		else if(clickEvent.equals(ReadWirteState.Write.toString())) 
+		else if(clickEvent.equals(ReadWirteState_Protocol.WRITE)) 
 			pressWriteButton();
-		else if(clickEvent.equals(ReadWirteState.CancelWrite.toString()))
+		else if(clickEvent.equals(ReadWirteState_Protocol.CANCEL_WRITE))
 			pressCancelWriteButton();
 	}
 	
 	private void pressReadButton() {
 		clientView.setReadButtonStatus();
-		transmitMsgBySocket(ReadWirteState.Read.toString());
+		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.READ+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
 	}
 	
 	private void pressCancelReadButton() {
 		clientView.setCancelReadButtonStatus();
-		transmitMsgBySocket(ReadWirteState.CancelRead.toString());
+		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.CANCEL_READ+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
 	}
 	
 	private void pressWriteButton() {
 		clientView.setWriteButtonStatus();
-		transmitMsgBySocket(ReadWirteState.Write.toString());
+		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.WRITE+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
 	}
 	
 	private void pressCancelWriteButton() {
 		clientView.setCancelWriteButtonStatus();
-		transmitMsgBySocket(ReadWirteState.CancelWrite.toString());
-	}
-	
-	public void printContentMsg(String msg) {
-		System.out.println(msg);
+		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.CANCEL_WRITE+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
 	}
 
 	public void transmitMsgBySocket(String msg) {
 		try {
-			socketOutput.writeUTF(msg+"\r\n");
+			socketOutput.writeUTF(msg);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

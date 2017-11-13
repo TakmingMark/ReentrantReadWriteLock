@@ -139,7 +139,6 @@ public class ClientView implements Observer{
 	
 	@Override
 	public void update(String msg) {
-		// TODO Auto-generated method stub
 		jTextArea.append(msg);
 	}
 	

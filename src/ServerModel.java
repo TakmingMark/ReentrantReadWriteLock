@@ -6,16 +6,17 @@ import java.net.Socket;
 
 import com.sun.glass.ui.TouchInputSupport;
 
-public class ServerModel implements Runnable{
+public class ServerModel implements Runnable,Observer{
 
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
-	private ServerView serverView;
+	private ServerView serverView=null;
 	private Socket clientSocket=null; 
-	private String clientIP;
+	private ServerThreadModel serverThread=null;
+	private String clientIP="";
 	private DataOutputStream socketOutput = null;
-	private UserList<String, DataOutputStream> userList;
-	private int ListenPort;
+	private UserList<String, DataOutputStream> userList=null;
+	private int ListenPort=0;
 	 
 	@Override
 	public void run() {
@@ -47,7 +48,10 @@ public class ServerModel implements Runnable{
 	            	clientSocket = serverSocket.accept();
 	            	clientIP=clientSocket.getInetAddress().toString();
 		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
-		      		threadPool.executeThreadPool(ServerThreadModel.getServerThreadModelObject(clientSocket,serverView));
+		        	serverThread=ServerThreadModel.getServerThreadModelObject(clientSocket,serverView);
+		      		serverThread.attach(serverView, Architecture_Protocol.View);
+		      		serverThread.attach(this, Architecture_Protocol.Model);
+		        	threadPool.executeThreadPool(serverThread);
 		      		userList.addUser(clientIP, socketOutput);
 	            }
 		 	}
@@ -66,12 +70,17 @@ public class ServerModel implements Runnable{
 	                e.printStackTrace();
 	            }
 	        }
-
 	}
 	
 
 	public void printContentMsg(String msg) {
 		System.out.println(msg);
+	}
+
+	@Override
+	public void update(String msg) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 	

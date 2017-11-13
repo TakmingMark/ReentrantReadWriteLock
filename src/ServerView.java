@@ -1,6 +1,4 @@
 import java.awt.Dimension;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -12,7 +10,7 @@ import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 
-public class ServerView{
+public class ServerView implements Observer{
 	private JFrame jFrame;
 	private JPanel jPanel;
 	private JTextArea jTextArea;
@@ -66,15 +64,15 @@ public class ServerView{
 		jFrame.setEnabled(true);
 		jFrame.setVisible(true);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jTextArea.setText("sadfsdf");
+	}
+	
+	@Override
+	public void update(String msg) {
+		jTextArea.append(msg+"\r\n");
 	}
 	
 	public void close() {
 		jFrame.setVisible(false);
 		jFrame.dispose();
-	}
-
-	public void updatejTextArea(String inputMsg) {
-		jTextArea.append(inputMsg);
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 public class ClientThreadModel implements Runnable,Subject{
 
 	private Socket clientSocket=null;
-	private Map<Observer, Architecture> observers=null;
+	private Map<Observer, String> observers=null;
 	private String IPAddress="";
 	public int listenPort=0;
 	private DataInputStream socketInput=null;
@@ -40,7 +40,7 @@ public class ClientThreadModel implements Runnable,Subject{
 	
 	@Override
 	public void run() {
-		notifyObserver(Architecture.View,"Client connect..."+"\r\n");
+		notifyObserver(Architecture_Protocol.View,"Client connect..."+"\r\n");
 		receiveMsgBySocket();
 	}
 	
@@ -61,24 +61,50 @@ public class ClientThreadModel implements Runnable,Subject{
 		 String headProtocol=tokens[0];
 		 String msg=tokens[1];
 		 String rearProtocol=tokens[2];
-		 Architecture architecture=null;
+		 String architecture=null;
 		 
-		 if(headProtocol.startsWith("1") && rearProtocol.startsWith("1")) {
-			 architecture=Architecture.Controller;
+		 if(headProtocol.startsWith(Communcation_Protocol.M) && rearProtocol.endsWith(Communcation_Protocol.M)) {
+			 architecture=Architecture_Protocol.Model;
+			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith("2") && rearProtocol.startsWith("2")){ 
-			 architecture=Architecture.View;
+		 else if(headProtocol.startsWith(Communcation_Protocol.V) && rearProtocol.endsWith(Communcation_Protocol.V)) {
+			 architecture=Architecture_Protocol.View;
+			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith("3") && rearProtocol.startsWith("3")){
-			 architecture=Architecture.Model;
+		 else if(headProtocol.startsWith(Communcation_Protocol.C) && rearProtocol.endsWith(Communcation_Protocol.C)) {
+			 architecture=Architecture_Protocol.Controller;
+			 notifyObserver(architecture,msg);
 		 }
-		 
-		 notifyObserver(architecture,inputMsg);
-//		clientView.updatejTextArea(msg+"\r\n");
+		 else if(headProtocol.startsWith(Communcation_Protocol.M_V) && rearProtocol.endsWith(Communcation_Protocol.M_V)) {
+			 architecture=Architecture_Protocol.Model;
+			 notifyObserver(architecture,msg);
+			 architecture=Architecture_Protocol.View;
+			 notifyObserver(architecture,msg);
+		 }
+		 else if(headProtocol.startsWith(Communcation_Protocol.M_C) && rearProtocol.endsWith(Communcation_Protocol.M_C)) {
+			 architecture=Architecture_Protocol.Model;
+			 notifyObserver(architecture,msg);
+			 architecture=Architecture_Protocol.Controller;
+			 notifyObserver(architecture,msg);
+		 }
+		 else if(headProtocol.startsWith(Communcation_Protocol.V_C) && rearProtocol.endsWith(Communcation_Protocol.V_C)) {
+			 architecture=Architecture_Protocol.View;
+			 notifyObserver(architecture,msg);
+			 architecture=Architecture_Protocol.Controller;
+			 notifyObserver(architecture,msg);
+		 }
+		 else if(headProtocol.startsWith(Communcation_Protocol.M_V_C) && rearProtocol.endsWith(Communcation_Protocol.M_V_C)) {
+			 architecture=Architecture_Protocol.Model;
+			 notifyObserver(architecture,msg);
+			 architecture=Architecture_Protocol.View;
+			 notifyObserver(architecture,msg);
+			 architecture=Architecture_Protocol.Controller;
+			 notifyObserver(architecture,msg);
+		 }
 	}
 
 	@Override
-	public void attach(Observer observer,Architecture architecture) {
+	public void attach(Observer observer,String architecture) {
 		observers.put(observer, architecture);
 	}
 
@@ -88,11 +114,11 @@ public class ClientThreadModel implements Runnable,Subject{
 	}
 
 	@Override
-	public void notifyObserver(Architecture action,String msg) {
+	public void notifyObserver(String action,String msg) {
 		
-		for(Map.Entry<Observer, Architecture> element : observers.entrySet()) {
+		for(Map.Entry<Observer, String> element : observers.entrySet()) {
 		    Observer observer = element.getKey();
-		    Architecture architecture = element.getValue();
+		    String architecture = element.getValue();
 		    
 		    if(architecture==action) {
 		    	observer.update(msg);
