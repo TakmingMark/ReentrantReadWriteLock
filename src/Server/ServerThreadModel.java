@@ -32,10 +32,9 @@ class ServerThreadModel implements Runnable,Subject{
 	private void initServerThreadModel() {
 		observers=new HashMap<>();
 		try {
-			this.clientSocket.setSoTimeout(60000);
+//			this.clientSocket.setSoTimeout(60000);
 			socketInput=new DataInputStream(this.clientSocket.getInputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

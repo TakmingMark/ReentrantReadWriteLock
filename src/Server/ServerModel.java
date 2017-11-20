@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 import com.sun.glass.ui.TouchInputSupport;
 
@@ -52,13 +53,14 @@ public class ServerModel implements Runnable,Observer{
 		         
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
-	            	clientIP=clientSocket.getInetAddress().toString();
+	            	clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
 		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
 		        	serverThread=ServerThreadModel.getServerThreadModelObject(clientSocket,serverView);
 		      		serverThread.attach(serverView, Architecture_Protocol.View);
 		      		serverThread.attach(this, Architecture_Protocol.Model);
 		        	threadPool.executeThreadPool(serverThread);
 		      		userList.addUser(clientIP, socketOutput);
+		      		printUserList();
 	            }
 		 	}
 	    catch ( IOException e ){
@@ -87,6 +89,12 @@ public class ServerModel implements Runnable,Observer{
 	public void update(String msg) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void printUserList() {
+		for(String element:userList.getIPList()) {
+			printContentMsg(element);
+		}
 	}
 }
 	
