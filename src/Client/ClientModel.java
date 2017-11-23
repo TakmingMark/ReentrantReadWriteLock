@@ -19,8 +19,8 @@ import com.sun.xml.internal.ws.db.glassfish.BridgeWrapper;
 
 import Observer.Observer;
 import Protocol.Architecture_Protocol;
-import Protocol.Communcation_Protocol;
-import Protocol.ReadWirteState_Protocol;
+import Protocol.Communication_Protocol;
+import Protocol.ReadWriteState_Protocol;
 
 public class ClientModel implements Observer{
 
@@ -62,34 +62,34 @@ public class ClientModel implements Observer{
 	
 	public void buttonClick(String clickEvent) {
 		System.out.println(clickEvent);
-		if(clickEvent.equals(ReadWirteState_Protocol.READ))
+		if(clickEvent.equals(ReadWriteState_Protocol.READ))
 			pressReadButton();
-		else if(clickEvent.equals(ReadWirteState_Protocol.CANCEL_READ))
+		else if(clickEvent.equals(ReadWriteState_Protocol.CANCEL_READ))
 			pressCancelReadButton();
-		else if(clickEvent.equals(ReadWirteState_Protocol.WRITE)) 
+		else if(clickEvent.equals(ReadWriteState_Protocol.WRITE)) 
 			pressWriteButton();
-		else if(clickEvent.equals(ReadWirteState_Protocol.CANCEL_WRITE))
+		else if(clickEvent.equals(ReadWriteState_Protocol.CANCEL_WRITE))
 			pressCancelWriteButton();
 	}
 	
 	private void pressReadButton() {
 		clientView.setReadButtonStatus();
-		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.READ+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
+		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.READ+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
 	}
 	
 	private void pressCancelReadButton() {
 		clientView.setCancelReadButtonStatus();
-		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.CANCEL_READ+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
+		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.CANCEL_READ+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
 	}
 	
 	private void pressWriteButton() {
 		clientView.setWriteButtonStatus();
-		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.WRITE+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
+		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.WRITE+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
 	}
 	
 	private void pressCancelWriteButton() {
 		clientView.setCancelWriteButtonStatus();
-		transmitMsgBySocket(Communcation_Protocol.M_V+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.CANCEL_WRITE+Communcation_Protocol.SPLIT_SIGN+Communcation_Protocol.M_V);
+		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.CANCEL_WRITE+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
 	}
 
 	public void transmitMsgBySocket(String msg) {

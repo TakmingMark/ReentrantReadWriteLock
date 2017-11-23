@@ -5,11 +5,17 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import javax.crypto.interfaces.PBEKey;
 
 import Observer.Observer;
 import Observer.Subject;
 import Protocol.Architecture_Protocol;
-import Protocol.Communcation_Protocol;
+import Protocol.Communication_Protocol;
+import Protocol.ReadWriteState_Protocol;
 
 class ServerThreadModel implements Runnable,Subject{
 	private Socket clientSocket=null;
@@ -18,6 +24,10 @@ class ServerThreadModel implements Runnable,Subject{
 	private DataInputStream socketInput=null;
 	private String inputMsg="";
 	private int heartBeatTime=30;
+	
+	private final static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();  
+	private final Lock readLock = readWriteLock.readLock();  
+	private final Lock writeLock = readWriteLock.writeLock();  
 	
 	private ServerThreadModel(Socket clientSocket,ServerView serverView){
 		this.clientSocket=clientSocket;
@@ -59,43 +69,43 @@ class ServerThreadModel implements Runnable,Subject{
 	}
 	
 	private void processInputMsg(String inputMsg) {
-		 String[] tokens = inputMsg.split(Communcation_Protocol.SPLIT_SIGN);
+		 String[] tokens = inputMsg.split("\\"+Communication_Protocol.SPLIT_SIGN);
 		 String headProtocol=tokens[0];
 		 String msg=tokens[1];
 		 String rearProtocol=tokens[2];
 		 String architecture=null;
 		 
-		 if(headProtocol.startsWith(Communcation_Protocol.M) && rearProtocol.endsWith(Communcation_Protocol.M)) {
+		 if(headProtocol.startsWith(Communication_Protocol.M) && rearProtocol.endsWith(Communication_Protocol.M)) {
 			 architecture=Architecture_Protocol.Model;
 			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith(Communcation_Protocol.V) && rearProtocol.endsWith(Communcation_Protocol.V)) {
+		 else if(headProtocol.startsWith(Communication_Protocol.V) && rearProtocol.endsWith(Communication_Protocol.V)) {
 			 architecture=Architecture_Protocol.View;
 			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith(Communcation_Protocol.C) && rearProtocol.endsWith(Communcation_Protocol.C)) {
+		 else if(headProtocol.startsWith(Communication_Protocol.C) && rearProtocol.endsWith(Communication_Protocol.C)) {
 			 architecture=Architecture_Protocol.Controller;
 			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith(Communcation_Protocol.M_V) && rearProtocol.endsWith(Communcation_Protocol.M_V)) {
+		 else if(headProtocol.startsWith(Communication_Protocol.M_V) && rearProtocol.endsWith(Communication_Protocol.M_V)) {
 			 architecture=Architecture_Protocol.Model;
 			 notifyObserver(architecture,msg);
 			 architecture=Architecture_Protocol.View;
 			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith(Communcation_Protocol.M_C) && rearProtocol.endsWith(Communcation_Protocol.M_C)) {
+		 else if(headProtocol.startsWith(Communication_Protocol.M_C) && rearProtocol.endsWith(Communication_Protocol.M_C)) {
 			 architecture=Architecture_Protocol.Model;
-			 notifyObserver(architecture,msg);
-			 architecture=Architecture_Protocol.Controller;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communcation_Protocol.V_C) && rearProtocol.endsWith(Communcation_Protocol.V_C)) {
-			 architecture=Architecture_Protocol.View;
 			 notifyObserver(architecture,msg);
 			 architecture=Architecture_Protocol.Controller;
 			 notifyObserver(architecture,msg);
 		 }
-		 else if(headProtocol.startsWith(Communcation_Protocol.M_V_C) && rearProtocol.endsWith(Communcation_Protocol.M_V_C)) {
+		 else if(headProtocol.startsWith(Communication_Protocol.V_C) && rearProtocol.endsWith(Communication_Protocol.V_C)) {
+			 architecture=Architecture_Protocol.View;
+			 notifyObserver(architecture,msg);
+			 architecture=Architecture_Protocol.Controller;
+			 notifyObserver(architecture,msg);
+		 }
+		 else if(headProtocol.startsWith(Communication_Protocol.M_V_C) && rearProtocol.endsWith(Communication_Protocol.M_V_C)) {
 			 architecture=Architecture_Protocol.Model;
 			 notifyObserver(architecture,msg);
 			 architecture=Architecture_Protocol.View;
@@ -123,16 +133,44 @@ class ServerThreadModel implements Runnable,Subject{
 		    String architecture = element.getValue();
 		    
 		    if(architecture==action) {
-		    	observer.update(msg);
-		    }
-		    else if(architecture==action) {
-		    	observer.update(msg);
-		    }
-		    else if(architecture==action) {
-		    	observer.update(msg);
+		    	if(architecture==Architecture_Protocol.Model) {
+		    		update(observer,msg);
+		    	}
+		    	else
+		    		observer.update(msg);
 		    }
 		}
 	}
-
 	
+	public void update(Observer observer,String msg) {
+		if(msg.equals(Communication_Protocol.READ)) {
+			if(readLock.tryLock()) {
+				System.out.println("read lock");
+			}
+			else {
+				String clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
+				String content=Communication_Protocol.IS_READED;
+				msg=clientIP+Communication_Protocol.SPLIT_SIGN+content;
+				observer.update(msg);
+				System.out.println(" not read lock");
+			}
+		}
+		else if(msg.equals(Communication_Protocol.CANCEL_READ)) {
+			readLock.unlock();
+			System.out.println("read unlock");
+		}
+		else if(msg.equals(Communication_Protocol.WRITE)) {
+			if(writeLock.tryLock()) {
+				System.out.println("write lock");
+			}
+			else {
+				System.out.println("not write lock");
+			}
+
+		}
+		else if(msg.equals(Communication_Protocol.CANCEL_WRITE)) {
+			writeLock.unlock();
+			System.out.println("write unlock");
+		}
+	}
 }

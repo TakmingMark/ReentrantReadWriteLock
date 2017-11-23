@@ -12,7 +12,7 @@ import java.util.Map;
 import Observer.Observer;
 import Observer.Subject;
 import Protocol.Architecture_Protocol;
-import Protocol.Communcation_Protocol;
+import Protocol.Communication_Protocol;
 
 public class ClientThreadModel implements Runnable, Subject {
 
@@ -62,41 +62,42 @@ public class ClientThreadModel implements Runnable, Subject {
 	}
 
 	private void processInputMsg(String inputMsg) {
-		String[] tokens = inputMsg.split(":");
+		System.out.println(inputMsg);
+		String[] tokens = inputMsg.split("\\"+Communication_Protocol.SPLIT_SIGN);
 		String headProtocol = tokens[0];
 		String msg = tokens[1];
 		String rearProtocol = tokens[2];
 		String architecture = null;
-
-		if (headProtocol.startsWith(Communcation_Protocol.M) && rearProtocol.endsWith(Communcation_Protocol.M)) {
+		
+		if (headProtocol.startsWith(Communication_Protocol.M) && rearProtocol.endsWith(Communication_Protocol.M)) {
 			architecture = Architecture_Protocol.Model;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communcation_Protocol.V) && rearProtocol.endsWith(Communcation_Protocol.V)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.V) && rearProtocol.endsWith(Communication_Protocol.V)) {
 			architecture = Architecture_Protocol.View;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communcation_Protocol.C) && rearProtocol.endsWith(Communcation_Protocol.C)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.C) && rearProtocol.endsWith(Communication_Protocol.C)) {
 			architecture = Architecture_Protocol.Controller;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communcation_Protocol.M_V)
-				&& rearProtocol.endsWith(Communcation_Protocol.M_V)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.M_V)
+				&& rearProtocol.endsWith(Communication_Protocol.M_V)) {
 			architecture = Architecture_Protocol.Model;
 			notifyObserver(architecture, msg);
 			architecture = Architecture_Protocol.View;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communcation_Protocol.M_C)
-				&& rearProtocol.endsWith(Communcation_Protocol.M_C)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.M_C)
+				&& rearProtocol.endsWith(Communication_Protocol.M_C)) {
 			architecture = Architecture_Protocol.Model;
-			notifyObserver(architecture, msg);
-			architecture = Architecture_Protocol.Controller;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communcation_Protocol.V_C)
-				&& rearProtocol.endsWith(Communcation_Protocol.V_C)) {
-			architecture = Architecture_Protocol.View;
 			notifyObserver(architecture, msg);
 			architecture = Architecture_Protocol.Controller;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communcation_Protocol.M_V_C)
-				&& rearProtocol.endsWith(Communcation_Protocol.M_V_C)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.V_C)
+				&& rearProtocol.endsWith(Communication_Protocol.V_C)) {
+			architecture = Architecture_Protocol.View;
+			notifyObserver(architecture, msg);
+			architecture = Architecture_Protocol.Controller;
+			notifyObserver(architecture, msg);
+		} else if (headProtocol.startsWith(Communication_Protocol.M_V_C)
+				&& rearProtocol.endsWith(Communication_Protocol.M_V_C)) {
 			architecture = Architecture_Protocol.Model;
 			notifyObserver(architecture, msg);
 			architecture = Architecture_Protocol.View;

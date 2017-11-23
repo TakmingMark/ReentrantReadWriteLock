@@ -26,6 +26,10 @@ public class UserList<UserIP,UserOutputStream> {
 		return outPutStreamList;
 	}
 	
+	public UserOutputStream getOutPutStreamByIP(UserIP userIP) {
+		return userList.get(userIP);
+	}
+	
 	public void moveUserByIP(UserIP userIP) {
 		userList.remove(userIP);
 	}
