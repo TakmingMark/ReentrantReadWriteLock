@@ -143,34 +143,35 @@ class ServerThreadModel implements Runnable,Subject{
 	}
 	
 	public void update(Observer observer,String msg) {
+		String clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
+		String content=null;
 		if(msg.equals(Communication_Protocol.READ)) {
 			if(readLock.tryLock()) {
-				System.out.println("read lock");
+				content=Communication_Protocol.READING;
 			}
 			else {
-				String clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
-				String content=Communication_Protocol.IS_READED;
-				msg=clientIP+Communication_Protocol.SPLIT_SIGN+content;
-				observer.update(msg);
-				System.out.println(" not read lock");
+				content=Communication_Protocol.HAVE_READED;
 			}
 		}
 		else if(msg.equals(Communication_Protocol.CANCEL_READ)) {
 			readLock.unlock();
-			System.out.println("read unlock");
+			content=Communication_Protocol.CANCEL_READING;
 		}
 		else if(msg.equals(Communication_Protocol.WRITE)) {
 			if(writeLock.tryLock()) {
-				System.out.println("write lock");
+				content=Communication_Protocol.WRITING;
 			}
 			else {
-				System.out.println("not write lock");
+				
+				content=Communication_Protocol.HAVE_WROTE;
 			}
 
 		}
 		else if(msg.equals(Communication_Protocol.CANCEL_WRITE)) {
 			writeLock.unlock();
-			System.out.println("write unlock");
+			content=Communication_Protocol.CANCEL_WRITING;
 		}
+		msg=clientIP+Communication_Protocol.SPLIT_SIGN+content;
+		observer.update(msg);
 	}
 }

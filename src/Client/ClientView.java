@@ -1,6 +1,7 @@
 package Client;
 import java.awt.Dimension;
 
+import javax.smartcardio.CommandAPDU;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -8,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 import Observer.Observer;
+import Protocol.ReadWriteState_Protocol;
 
 
 public class ClientView implements Observer{
@@ -141,6 +143,10 @@ public class ClientView implements Observer{
 	
 	@Override
 	public void update(String msg) {
+		if(msg.equals(ReadWriteState_Protocol.HAVE_READED)) 
+			setCancelReadButtonStatus();
+		else if(msg.equals(ReadWriteState_Protocol.HAVE_WROTE))
+			setCancelWriteButtonStatus();
 		jTextArea.append(msg);
 	}
 	

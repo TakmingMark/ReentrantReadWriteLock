@@ -61,7 +61,7 @@ public class ServerModel implements Runnable,Observer{
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
 	            	clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
-		        	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
+	            	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
 		        	serverThread=ServerThreadModel.getServerThreadModelObject(clientSocket,serverView);
 		      		serverThread.attach(serverView, Architecture_Protocol.View);
 		      		serverThread.attach(this, Architecture_Protocol.Model);
@@ -92,6 +92,7 @@ public class ServerModel implements Runnable,Observer{
 	}
 	
 	public void printUserList() {
+		printContentMsg("---------------------------------------------");
 		for(String element:userList.getIPList()) {
 			printContentMsg(element);
 		}
@@ -103,7 +104,7 @@ public class ServerModel implements Runnable,Observer{
 		String clientIP=tokens[0];
 		String content=tokens[1];
 		DataOutputStream socketOutput=userList.getOutPutStreamByIP(clientIP);
-		msg=Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+content+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V;
+		msg=Communication_Protocol.V+Communication_Protocol.SPLIT_SIGN+content+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.V;
 		transmitMsgBySocket(socketOutput, msg);
 	}
 	
