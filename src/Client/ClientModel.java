@@ -61,7 +61,6 @@ public class ClientModel implements Observer{
 	}
 	
 	public void buttonClick(String clickEvent) {
-		System.out.println(clickEvent);
 		if(clickEvent.equals(ReadWriteState_Protocol.READ))
 			pressReadButton();
 		else if(clickEvent.equals(ReadWriteState_Protocol.CANCEL_READ))
