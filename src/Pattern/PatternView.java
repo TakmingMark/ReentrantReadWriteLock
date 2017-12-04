@@ -5,12 +5,17 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 
+
+
+import Tools.TextView;
+
 public class PatternView {
-	public JFrame jFrame;
-	public JPanel jPanel;
+	public JFrame frame;
+	public JPanel panel;
 	public JButton serverButton,clientButton;
 	
 	private PatternView() {	
@@ -22,17 +27,17 @@ public class PatternView {
 	}	
 		
 	private void initView() {
-		jFrame=new JFrame("Pattern Option");
-		jPanel=new JPanel();
-		serverButton=new JButton("Server");
-		clientButton=new JButton("Client");
+		frame=new JFrame(TextView.FrameName);
+		panel=new JPanel();
+		serverButton=new JButton(TextView.ServerButtonName);
+		clientButton=new JButton(TextView.ClientButtonName);
 		
-		jFrame.setLocation(300, 300);
+		frame.setLocation(300, 300);
 		
-		jPanel.setPreferredSize(new Dimension(350, 300));
+		panel.setPreferredSize(new Dimension(350, 300));
 		
-		GroupLayout groupLayout=new GroupLayout(jPanel);
-		jPanel.setLayout(groupLayout);
+		GroupLayout groupLayout=new GroupLayout(panel);
+		panel.setLayout(groupLayout);
 	
 		groupLayout.setHorizontalGroup(
 				groupLayout.createSequentialGroup()
@@ -57,10 +62,10 @@ public class PatternView {
 	                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				);
 		
-		jFrame.add(jPanel);
-		jFrame.pack();
-		jFrame.setVisible(true);
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(panel);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 	}
 	
 	public void setServerButtonListener(PatternAction severAction) {
@@ -73,8 +78,8 @@ public class PatternView {
 	
 	public void close() {
 		
-		jFrame.setFocusable(false);
-		jFrame.setVisible(false);
-		jFrame.dispose();
+		frame.setFocusable(false);
+		frame.setVisible(false);
+		frame.dispose();
 	}
 }

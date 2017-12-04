@@ -147,7 +147,7 @@ public class ClientView implements Observer{
 			setCancelReadButtonStatus();
 		else if(msg.equals(ReadWriteState_Protocol.HAVE_WROTE))
 			setCancelWriteButtonStatus();
-		jTextArea.append(msg);
+		jTextArea.append(msg+"\r\n");
 	}
 	
 }

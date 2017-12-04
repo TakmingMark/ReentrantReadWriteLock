@@ -69,6 +69,7 @@ class ServerThreadModel implements Runnable,Subject{
 	}
 	
 	private void processInputMsg(String inputMsg) {
+		System.out.println("recived:"+inputMsg);
 		 String[] tokens = inputMsg.split("\\"+Communication_Protocol.SPLIT_SIGN);
 		 String headProtocol=tokens[0];
 		 String msg=tokens[1];

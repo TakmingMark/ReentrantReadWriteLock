@@ -23,6 +23,8 @@ public class UserList<UserIP,UserOutputStream> {
 	
 	public List<UserOutputStream> getOutPutStreamList() {
 		List<UserOutputStream> outPutStreamList=new ArrayList<UserOutputStream>(userList.values());
+		if(outPutStreamList.isEmpty())
+			return null;
 		return outPutStreamList;
 	}
 	

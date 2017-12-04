@@ -62,20 +62,22 @@ public class ClientThreadModel implements Runnable, Subject {
 	}
 
 	private void processInputMsg(String inputMsg) {
-		System.out.println(inputMsg);
-		String[] tokens = inputMsg.split("\\"+Communication_Protocol.SPLIT_SIGN);
+//		System.out.println(inputMsg);
+		String[] tokens = inputMsg.split("\\" + Communication_Protocol.SPLIT_SIGN);
 		String headProtocol = tokens[0];
 		String msg = tokens[1];
 		String rearProtocol = tokens[2];
 		String architecture = null;
-		
+
 		if (headProtocol.startsWith(Communication_Protocol.M) && rearProtocol.endsWith(Communication_Protocol.M)) {
 			architecture = Architecture_Protocol.Model;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.V) && rearProtocol.endsWith(Communication_Protocol.V)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.V)
+				&& rearProtocol.endsWith(Communication_Protocol.V)) {
 			architecture = Architecture_Protocol.View;
 			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.C) && rearProtocol.endsWith(Communication_Protocol.C)) {
+		} else if (headProtocol.startsWith(Communication_Protocol.C)
+				&& rearProtocol.endsWith(Communication_Protocol.C)) {
 			architecture = Architecture_Protocol.Controller;
 			notifyObserver(architecture, msg);
 		} else if (headProtocol.startsWith(Communication_Protocol.M_V)

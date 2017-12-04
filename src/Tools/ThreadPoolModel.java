@@ -16,7 +16,7 @@ public class ThreadPoolModel {
 	private ThreadPoolModel(int maximumPoolSize,long keepAliveTime) {	
 		int corePoolSize=Runtime.getRuntime().availableProcessors();
 		unit=TimeUnit.MILLISECONDS;
-		workQueue= new ArrayBlockingQueue<Runnable>(50);
+		workQueue= new ArrayBlockingQueue<Runnable>(0);//if not set 0, the corePoolSize never get increase
 		
 		executor=new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 	}
@@ -37,5 +37,14 @@ public class ThreadPoolModel {
 	
 	public void shutdown() {
 		executor.shutdown();
+	}
+	
+	public void getThreadPoolInformation(){
+		System.out.println("executor.getActiveCount():"+executor.getActiveCount());
+		System.out.println("executor.getPoolSize():"+executor.getPoolSize());
+		System.out.println("executor.getCorePoolSize():"+executor.getCorePoolSize());
+		System.out.println("executor.getMaximumPoolSize():"+executor.getMaximumPoolSize());
+		System.out.println("executor.getLargestPoolSize():"+executor.getLargestPoolSize());
+		System.out.println("executor.getTaskCount():"+executor.getTaskCount());
 	}
 }

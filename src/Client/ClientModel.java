@@ -93,6 +93,7 @@ public class ClientModel implements Observer{
 
 	public void transmitMsgBySocket(String msg) {
 		try {
+//			System.out.println("Client:"+msg);
 			socketOutput.writeUTF(msg);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

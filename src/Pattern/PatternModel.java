@@ -2,6 +2,7 @@ package Pattern;
 import javax.print.attribute.standard.RequestingUserName;
 
 import Main.MainAcitivity;
+import Tools.TextView;
 
 public class PatternModel {
 
@@ -17,11 +18,11 @@ public class PatternModel {
 	}
 	
 	public void conversionController(String pattern) {
-		if(pattern.equals("Server")) {
+		if(pattern.equals(TextView.ServerButtonName)) {
 			patternView.close();
 			mainAcitivity.initServer();
 		}
-		else if(pattern.equals("Client")) {
+		else if(pattern.equals(TextView.ClientButtonName)) {
 			patternView.close();
 			mainAcitivity.initClient();
 		}
