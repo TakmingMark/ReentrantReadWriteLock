@@ -1,13 +1,11 @@
 package Main;
-import java.util.List;
-
 import Client.ClientController;
 import Client.ClientModel;
 import Client.ClientView;
 import Pattern.PatternController;
 import Pattern.PatternModel;
 import Pattern.PatternView;
-import Server.ServerContorller;
+import Server.ServerController;
 import Server.ServerModel;
 import Server.ServerView;
 import Tools.ThreadPoolModel;
@@ -30,7 +28,7 @@ public class MainAcitivity {
 		ServerModel serverModel=ServerModel.getServerObject(5050,threadPoolModel,serverView); //發生位置的地方
 		Thread serverModelProcess =new Thread(serverModel);
 		serverModelProcess.start();
-		ServerContorller serverContorller=ServerContorller.getServerContorllerObject(serverView, serverModel);
+		ServerController serverContorller=ServerController.getServerContorllerObject(serverView, serverModel);
 	}
 	
 	public void initClient() {

@@ -2,17 +2,12 @@ package Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonModel;
-import javax.swing.text.ParagraphView;
-
-import com.sun.corba.se.spi.oa.OADefault;
-
 import Main.MainAcitivity;
 
 public class PatternController {
-	MainAcitivity mainAcitivity;
-	PatternView patternView;
-	PatternModel patternModel;
+	private MainAcitivity mainAcitivity;
+	private PatternView patternView;
+	private PatternModel patternModel;
 	
 	private PatternController(PatternView patternView,PatternModel patternModel) {
 		this.patternView=patternView;
@@ -30,11 +25,11 @@ public class PatternController {
 		patternView.setServerButtonListener(patternAction);
 	}
 	
-	
 }
 class PatternAction implements ActionListener{
 
-	PatternModel patternModel;
+	private PatternModel patternModel;
+	
 	public PatternAction(PatternModel patternModel) {
 		this.patternModel=patternModel;
 	}

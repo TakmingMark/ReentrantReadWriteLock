@@ -1,14 +1,10 @@
 package Tools;
-import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.sun.xml.internal.ws.db.glassfish.BridgeWrapper;
-
 public class ThreadPoolModel {
-	
 	private ThreadPoolExecutor executor;
 	private TimeUnit unit;
 	private BlockingQueue<Runnable> workQueue;
@@ -16,8 +12,7 @@ public class ThreadPoolModel {
 	private ThreadPoolModel(int maximumPoolSize,long keepAliveTime) {	
 		int corePoolSize=Runtime.getRuntime().availableProcessors();
 		unit=TimeUnit.MILLISECONDS;
-		workQueue= new ArrayBlockingQueue<Runnable>(0);//if not set 0, the corePoolSize never get increase
-		
+		workQueue= new SynchronousQueue<Runnable>();//Pass the player immediately
 		executor=new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 	}
 	

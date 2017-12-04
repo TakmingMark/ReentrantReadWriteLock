@@ -1,5 +1,4 @@
 package Observer;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
 public interface Observer {
 

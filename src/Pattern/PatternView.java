@@ -5,11 +5,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
-
-
 
 import Tools.TextView;
 

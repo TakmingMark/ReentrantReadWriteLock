@@ -9,13 +9,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.crypto.interfaces.PBEKey;
-
 import Observer.Observer;
 import Observer.Subject;
 import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
-import Protocol.ReadWriteState_Protocol;
 
 class ServerThreadModel implements Runnable,Subject{
 	private Socket clientSocket=null;

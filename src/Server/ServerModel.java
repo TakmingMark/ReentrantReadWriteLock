@@ -1,31 +1,19 @@
 package Server;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import com.sun.glass.ui.TouchInputSupport;
 
 import Observer.Observer;
 import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
-import Protocol.ReadWriteState_Protocol;
 import Tools.ThreadPoolModel;
 import Tools.UserList;
-import javafx.scene.chart.PieChart.Data;
 
 public class ServerModel implements Runnable,Observer{
-
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
 	private ServerView serverView=null;
@@ -36,11 +24,8 @@ public class ServerModel implements Runnable,Observer{
 	private UserList<String, DataOutputStream> userList=null;
 	private int ListenPort=0;
 	 
-
-	
 	@Override
 	public void run() {
-//		setTimer();
 		initServerSocket();
 
 	}
@@ -53,7 +38,6 @@ public class ServerModel implements Runnable,Observer{
 	}
 	
 	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool,ServerView serverView) {
-		
 		return new ServerModel(ListenPort,threadPool,serverView);
 	}
 	
@@ -64,7 +48,7 @@ public class ServerModel implements Runnable,Observer{
 	private void initServerSocket() {
 		 try{
 			 	serverSocket = new ServerSocket( ListenPort );
-			 	printContentMsg("Server listening requests..."+"\r\n");
+			 	printContentMsg("Server listening requests...");
 		         
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
@@ -126,27 +110,6 @@ public class ServerModel implements Runnable,Observer{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	private void setTimer() {
-		Timer timer = new Timer();
-		new Thread( new Runnable() {
-			
-			@Override
-			public void run() {
-				timer.scheduleAtFixedRate(new TimerTask() {
-					
-					@Override
-					public void run() {
-						if(userList.getOutPutStreamList()!=null){
-							for(DataOutputStream dataOutputStream:userList.getOutPutStreamList()) {
-								transmitMsgBySocket(dataOutputStream,Communication_Protocol.V+Communication_Protocol.SPLIT_SIGN+LocalDate.now().toString()+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.V);
-							}
-						}
-					}
-				}, 1000,1000);	
-			}
-		}).start();
 	}
 }
 	

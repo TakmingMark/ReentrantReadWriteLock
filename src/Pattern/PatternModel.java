@@ -1,13 +1,11 @@
 package Pattern;
-import javax.print.attribute.standard.RequestingUserName;
-
 import Main.MainAcitivity;
 import Tools.TextView;
 
 public class PatternModel {
-
-	MainAcitivity mainAcitivity;
-	PatternView patternView;
+	private MainAcitivity mainAcitivity;
+	private PatternView patternView;
+	
 	private PatternModel(MainAcitivity mainAcitivity,PatternView patternView) {
 		this.mainAcitivity=mainAcitivity;
 		this.patternView=patternView;
