@@ -12,7 +12,7 @@ import Observer.Observer;
 import Protocol.ReadWriteState_Protocol;
 
 
-public class ClientView implements Observer{
+public class ClientView{
 	public JFrame jFrame;
 	public JPanel jPanel;
 	public JTextArea jTextArea;
@@ -25,7 +25,7 @@ public class ClientView implements Observer{
 	public static ClientView getClientViewObject() {
 		return new ClientView();
 	}
-	
+
 	private void initView() {
 		jFrame=new JFrame("ReentrantReakWriteLock");
 		jPanel=new JPanel();
@@ -97,22 +97,6 @@ public class ClientView implements Observer{
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void setReadButtonListener(ClientAction readAction) {
-		readButton.addActionListener(readAction);
-	}
-	
-	public void setCancelReadButtonListener(ClientAction cancelReadAction) {
-		cancelReadButton.addActionListener(cancelReadAction);
-	}
-	
-	public void setWriteButtonListener(ClientAction writeAction) {
-		writeButton.addActionListener(writeAction);
-	}
-	
-	public void setCancelWriteButtonListener(ClientAction cancelWriteAction) {
-		cancelWriteButton.addActionListener(cancelWriteAction);
-	}
-	
 	public void setReadButtonStatus() {
 		readButton.setEnabled(false);
 		cancelReadButton.setEnabled(true);
@@ -141,7 +125,6 @@ public class ClientView implements Observer{
 		cancelWriteButton.setEnabled(false);
 	}
 	
-	@Override
 	public void update(String msg) {
 		if(msg.equals(ReadWriteState_Protocol.HAVE_READED)) 
 			setCancelReadButtonStatus();
@@ -150,4 +133,35 @@ public class ClientView implements Observer{
 		jTextArea.append(msg+"\r\n");
 	}
 	
+	public JButton getReadButton() {
+		return readButton;
+	}
+
+	public void setReadButton(JButton readButton) {
+		this.readButton = readButton;
+	}
+
+	public JButton getCancelReadButton() {
+		return cancelReadButton;
+	}
+
+	public void setCancelReadButton(JButton cancelReadButton) {
+		this.cancelReadButton = cancelReadButton;
+	}
+
+	public JButton getWriteButton() {
+		return writeButton;
+	}
+
+	public void setWriteButton(JButton writeButton) {
+		this.writeButton = writeButton;
+	}
+
+	public JButton getCancelWriteButton() {
+		return cancelWriteButton;
+	}
+
+	public void setCancelWriteButton(JButton cancelWriteButton) {
+		this.cancelWriteButton = cancelWriteButton;
+	}
 }

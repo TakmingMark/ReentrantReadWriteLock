@@ -8,26 +8,26 @@ import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
 import Protocol.ReadWriteState_Protocol;
 
-public class ClientModel implements Observer{
+public class ClientModel{
 
-	private ClientView clientView;
-	private String IPAddress;
-	private int ListenPort;
+	private ClientController clientController=null;
+	private String IPAddress="";
+	private int ListenPort=0;
 	
-	private ClientThreadModel clientThreadModel;
-	private Thread clientThread;
+	private ClientThreadModel clientThreadModel=null;
+	private Thread clientThread=null;
 	private Socket clientSocket=null;
-	private DataOutputStream socketOutput;
+	private DataOutputStream socketOutput=null;
 	
-	private ClientModel(ClientView clientView,String IPAddress,int ListenPort) {
-		this.clientView=clientView;
+	private ClientModel(ClientController clientController,String IPAddress,int ListenPort) {
+		this.clientController=clientController;
 		this.IPAddress=IPAddress;
 		this.ListenPort=ListenPort;
 		initClientSocket();
 	}
 	
-	public static ClientModel getClientModelObject(ClientView clientView,String IPAddress,int ListenPort) {
-		return new ClientModel(clientView,IPAddress,ListenPort);
+	public static ClientModel getClientModelObject(ClientController clientController,String IPAddress,int ListenPort) {
+		return new ClientModel(clientController,IPAddress,ListenPort);
 	}
 	
 	private void initClientSocket() {
@@ -40,57 +40,18 @@ public class ClientModel implements Observer{
 		}
 		
 		clientThreadModel=ClientThreadModel.getClientThreadModelObject(clientSocket);
-		clientThreadModel.attach(this,Architecture_Protocol.Model);
-		clientThreadModel.attach(clientView,Architecture_Protocol.View);
+		clientThreadModel.attach(Architecture_Protocol.Controller,clientController);
 		clientThread=new Thread(clientThreadModel);
 		clientThread.start();
-	}
-	
-	public void buttonClick(String clickEvent) {
-		if(clickEvent.equals(ReadWriteState_Protocol.READ))
-			pressReadButton();
-		else if(clickEvent.equals(ReadWriteState_Protocol.CANCEL_READ))
-			pressCancelReadButton();
-		else if(clickEvent.equals(ReadWriteState_Protocol.WRITE)) 
-			pressWriteButton();
-		else if(clickEvent.equals(ReadWriteState_Protocol.CANCEL_WRITE))
-			pressCancelWriteButton();
-	}
-	
-	private void pressReadButton() {
-		clientView.setReadButtonStatus();
-		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.READ+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
-	}
-	
-	private void pressCancelReadButton() {
-		clientView.setCancelReadButtonStatus();
-		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.CANCEL_READ+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
-	}
-	
-	private void pressWriteButton() {
-		clientView.setWriteButtonStatus();
-		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.WRITE+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
-	}
-	
-	private void pressCancelWriteButton() {
-		clientView.setCancelWriteButtonStatus();
-		transmitMsgBySocket(Communication_Protocol.M_V+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.CANCEL_WRITE+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.M_V);
 	}
 
 	public void transmitMsgBySocket(String msg) {
 		try {
-//			System.out.println("Client:"+msg);
-			socketOutput.writeUTF(msg);
+			socketOutput.writeUTF(Communication_Protocol.SERVER_CONTROLLER+Communication_Protocol.SPLIT_SIGN+msg);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public void update(String msg) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 }

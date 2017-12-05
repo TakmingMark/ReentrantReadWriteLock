@@ -2,9 +2,9 @@ package Observer;
 
 public interface Subject {
 
-	public void attach(Observer observer,String architecture);
+	public void attach(String architecture,Observer observer);
 	
-	public void detach(Observer observer);
+	public void detach(String architecture);
 	
 	public void notifyObserver(String action,String inputMsg) ;
 }

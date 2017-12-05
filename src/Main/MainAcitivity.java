@@ -1,6 +1,7 @@
 package Main;
 import Client.ClientController;
 import Client.ClientModel;
+import Client.ClientThreadModel;
 import Client.ClientView;
 import Pattern.PatternController;
 import Pattern.PatternModel;
@@ -23,17 +24,28 @@ public class MainAcitivity {
 	}
 	
 	public void initServer() {
+		ServerController serverContorller=ServerController.getServerContorllerObject();
 		ServerView serverView=ServerView.getServerViewObject();
 		ThreadPoolModel threadPoolModel=ThreadPoolModel.getThreadPoolModelObject(20, 60000);
-		ServerModel serverModel=ServerModel.getServerObject(5050,threadPoolModel,serverView); //發生位置的地方
+		ServerModel serverModel=ServerModel.getServerObject(serverContorller,threadPoolModel,5050); //發生位置的地方
+		
+		serverContorller.setServerView(serverView);
+		serverContorller.setServerModel(serverModel);
+		serverContorller.initServerController();
+		
 		Thread serverModelProcess =new Thread(serverModel);
 		serverModelProcess.start();
-		ServerController serverContorller=ServerController.getServerContorllerObject(serverView, serverModel);
+		
 	}
 	
 	public void initClient() {
+		ClientController clientController=ClientController.getClientControllerObject();
 		ClientView clientView=ClientView.getClientViewObject();
-		ClientModel clientModel=ClientModel.getClientModelObject(clientView,"163.19.227.78",5050);
-		ClientController clientController=ClientController.getClientControllerObject(clientView, clientModel);
+		ClientThreadModel clientThreadModel=null;
+		ClientModel clientModel=ClientModel.getClientModelObject(clientController,"163.19.227.78",5050);
+	
+		clientController.setClientView(clientView);
+		clientController.setClientModel(clientModel);
+		clientController.initClientController();
 	}
 }

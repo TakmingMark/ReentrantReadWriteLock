@@ -10,7 +10,7 @@ import javax.swing.LayoutStyle;
 
 import Observer.Observer;
 
-public class ServerView implements Observer{
+public class ServerView {
 	private JFrame jFrame;
 	private JPanel jPanel;
 	private JTextArea jTextArea;
@@ -66,10 +66,9 @@ public class ServerView implements Observer{
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	@Override
 	public void update(String msg) {
 		jTextArea.append(msg+"\r\n");
-	}
+	}	
 	
 	public void close() {
 		jFrame.setVisible(false);

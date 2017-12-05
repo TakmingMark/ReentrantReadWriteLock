@@ -7,56 +7,59 @@ import java.time.LocalDate;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
+
 import Observer.Observer;
 import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
+import Tools.TextView;
 import Tools.ThreadPoolModel;
 import Tools.UserList;
 
-public class ServerModel implements Runnable,Observer{
+public class ServerModel implements Runnable{
+	private ServerController serverController=null;
+	private ServerThreadModel serverThread=null;
 	private ServerSocket serverSocket=null;
 	private ThreadPoolModel threadPool=null;
-	private ServerView serverView=null;
 	private Socket clientSocket=null; 
-	private ServerThreadModel serverThread=null;
+
 	private String clientIP="";
 	private DataOutputStream socketOutput = null;
 	private UserList<String, DataOutputStream> userList=null;
 	private int ListenPort=0;
 	 
-	@Override
-	public void run() {
-		initServerSocket();
-
-	}
-	
-	private ServerModel(int ListenPort,ThreadPoolModel threadPool,ServerView serverView) {
-		this.ListenPort=ListenPort;
+	private ServerModel(ServerController serverController,ThreadPoolModel threadPool,int ListenPort) {
+		this.serverController=serverController;
 		this.threadPool=threadPool;
-		this.serverView=serverView;
+		this.ListenPort=ListenPort;
+		
 		initServerModel();
 	}
 	
-	public static ServerModel getServerObject(int ListenPort,ThreadPoolModel threadPool,ServerView serverView) {
-		return new ServerModel(ListenPort,threadPool,serverView);
+	public static ServerModel getServerObject(ServerController serverController,ThreadPoolModel threadPool,int ListenPort) {
+		return new ServerModel(serverController,threadPool,ListenPort);
 	}
 	
 	private void initServerModel() {
 		userList=new UserList<String, DataOutputStream>();
 	}
 	
+	@Override
+	public void run() {
+		initServerSocket();
+	}
+	
 	private void initServerSocket() {
 		 try{
 			 	serverSocket = new ServerSocket( ListenPort );
-			 	printContentMsg("Server listening requests...");
+			 	updateViewTextArea(TextView.ServerCreateSuccess);
 		         
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
 	            	clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
 	            	socketOutput = new DataOutputStream( this.clientSocket.getOutputStream());
-		        	serverThread=ServerThreadModel.getServerThreadModelObject(clientSocket,serverView);
-		      		serverThread.attach(serverView, Architecture_Protocol.View);
-		      		serverThread.attach(this, Architecture_Protocol.Model);
+		        	serverThread=ServerThreadModel.getServerThreadModelObject(clientSocket);
+		      		serverThread.attach(Architecture_Protocol.Controller,serverController);
 		        	threadPool.executeThreadPool(serverThread);
 		      		userList.addUser(clientIP, socketOutput);
 		      		printUserList();
@@ -64,7 +67,7 @@ public class ServerModel implements Runnable,Observer{
 		 	}
 	    catch ( IOException e ){
 	        e.printStackTrace();
-	        printContentMsg("Server failed to start,whether the "+ListenPort+" port has been occupied?");
+	        updateViewTextArea(TextView.ServerCreateFail);
 	    }
 	    finally{
 	        if ( threadPool.isWorkThreadPoolExecutor()!=false )
@@ -79,33 +82,25 @@ public class ServerModel implements Runnable,Observer{
 	        }
 	}
 	
-	public void printContentMsg(String msg) {
-		System.out.println(msg);
+	public void updateViewTextArea(String msg) {
+		serverController.update(msg);
 	}
 	
 	public void printUserList() {
-		printContentMsg("---------------------------------------------");
+		updateViewTextArea("---------------------------------------------");
 		for(String element:userList.getIPList()) {
-			printContentMsg(element+":"+userList.getOutPutStreamByIP(element));
+			updateViewTextArea(element+":"+userList.getOutPutStreamByIP(element));
 		}
 	}
-
-	@Override
-	public void update(String msg) {
-		printContentMsg(msg);
-		String[] tokens = msg.split("\\"+Communication_Protocol.SPLIT_SIGN);
-		String clientIP=tokens[0];
-		String content=tokens[1];
-		DataOutputStream socketOutput=userList.getOutPutStreamByIP(clientIP);
-		msg=Communication_Protocol.V+Communication_Protocol.SPLIT_SIGN+content+Communication_Protocol.SPLIT_SIGN+Communication_Protocol.V;
-		printContentMsg(msg);
-		transmitMsgBySocket(socketOutput, msg);
-	}
 	
-	public void transmitMsgBySocket(DataOutputStream socketOutput,String msg) {
+	public void transmitMsgBySocket(String inputMsg) {
 		try {
-			System.out.println("Server:"+msg);
-			socketOutput.writeUTF(msg);
+				String[] tokens = inputMsg.split("\\"+Communication_Protocol.SPLIT_SIGN);
+				String clientIP=tokens[0];
+				String msg=tokens[1];
+				
+				socketOutput=userList.getOutPutStreamByIP(clientIP);
+				socketOutput.writeUTF(Communication_Protocol.CLIENT_CONTROLLER+Communication_Protocol.SPLIT_SIGN+msg);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

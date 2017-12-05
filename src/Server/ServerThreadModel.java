@@ -13,33 +13,32 @@ import Observer.Observer;
 import Observer.Subject;
 import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
+import Protocol.ReadWriteState_Protocol;
 
 class ServerThreadModel implements Runnable,Subject{
 	private Socket clientSocket=null;
-	private HashMap<Observer,String> observers=null;
-	private ServerView serverView=null;
+	private HashMap<String,Observer> observers=null;
 	private DataInputStream socketInput=null;
 	private String inputMsg="";
-	private int heartBeatTime=30;
+//	private int heartBeatTime=30;
 	
 	private final static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();  
 	private final Lock readLock = readWriteLock.readLock();  
 	private final Lock writeLock = readWriteLock.writeLock();  
 	
-	private ServerThreadModel(Socket clientSocket,ServerView serverView){
+	private ServerThreadModel(Socket clientSocket){
 		this.clientSocket=clientSocket;
-		this.serverView=serverView;
 		initServerThreadModel();
     }
 	
-	public static ServerThreadModel getServerThreadModelObject(Socket clientSocket,ServerView serverView) {
-		return new ServerThreadModel(clientSocket,serverView);
+	public static ServerThreadModel getServerThreadModelObject(Socket clientSocket) {
+		return new ServerThreadModel(clientSocket);
 	}
 	
 	private void initServerThreadModel() {
 		observers=new HashMap<>();
 		try {
-//			this.clientSocket.setSoTimeout(60000);
+			this.clientSocket.setSoTimeout(60000);
 			socketInput=new DataInputStream(this.clientSocket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -49,6 +48,16 @@ class ServerThreadModel implements Runnable,Subject{
 	@Override
 	public void run(){
 		receiveMsgBySocket();
+	}
+	
+	@Override
+	public void attach(String architecture,Observer observer) {
+		observers.put(architecture,observer);
+	}
+
+	@Override
+	public void detach(String architecture) {
+		observers.remove(architecture);
 	}
 
 	private void receiveMsgBySocket() {
@@ -66,110 +75,58 @@ class ServerThreadModel implements Runnable,Subject{
 	}
 	
 	private void processInputMsg(String inputMsg) {
-		System.out.println("recived:"+inputMsg);
 		 String[] tokens = inputMsg.split("\\"+Communication_Protocol.SPLIT_SIGN);
-		 String headProtocol=tokens[0];
+		 String protocol=tokens[0];
 		 String msg=tokens[1];
-		 String rearProtocol=tokens[2];
-		 String architecture=null;
+		 String architecture="";
 		 
-		 if(headProtocol.startsWith(Communication_Protocol.M) && rearProtocol.endsWith(Communication_Protocol.M)) {
-			 architecture=Architecture_Protocol.Model;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communication_Protocol.V) && rearProtocol.endsWith(Communication_Protocol.V)) {
-			 architecture=Architecture_Protocol.View;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communication_Protocol.C) && rearProtocol.endsWith(Communication_Protocol.C)) {
-			 architecture=Architecture_Protocol.Controller;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communication_Protocol.M_V) && rearProtocol.endsWith(Communication_Protocol.M_V)) {
-			 architecture=Architecture_Protocol.Model;
-			 notifyObserver(architecture,msg);
-			 architecture=Architecture_Protocol.View;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communication_Protocol.M_C) && rearProtocol.endsWith(Communication_Protocol.M_C)) {
-			 architecture=Architecture_Protocol.Model;
-			 notifyObserver(architecture,msg);
-			 architecture=Architecture_Protocol.Controller;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communication_Protocol.V_C) && rearProtocol.endsWith(Communication_Protocol.V_C)) {
-			 architecture=Architecture_Protocol.View;
-			 notifyObserver(architecture,msg);
-			 architecture=Architecture_Protocol.Controller;
-			 notifyObserver(architecture,msg);
-		 }
-		 else if(headProtocol.startsWith(Communication_Protocol.M_V_C) && rearProtocol.endsWith(Communication_Protocol.M_V_C)) {
-			 architecture=Architecture_Protocol.Model;
-			 notifyObserver(architecture,msg);
-			 architecture=Architecture_Protocol.View;
-			 notifyObserver(architecture,msg);
-			 architecture=Architecture_Protocol.Controller;
-			 notifyObserver(architecture,msg);
-		 }
-	}
-
-	@Override
-	public void attach(Observer observer,String architecture) {
-		observers.put(observer, architecture);
-	}
-
-	@Override
-	public void detach(Observer observer) {
-		observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObserver(String action,String msg) {
-		
-		for(Map.Entry<Observer, String> element : observers.entrySet()) {
-		    Observer observer = element.getKey();
-		    String architecture = element.getValue();
-		    
-		    if(architecture==action) {
-		    	if(architecture==Architecture_Protocol.Model) {
-		    		update(observer,msg);
-		    	}
-		    	else
-		    		observer.update(msg);
-		    }
+		switch (protocol) {
+		case Communication_Protocol.SERVER_CONTROLLER:
+			architecture=Architecture_Protocol.Controller;
+			 this.update(architecture,msg);
+			break;
+		default:
+			break;
 		}
+		 
 	}
-	
-	public void update(Observer observer,String msg) {
+
+	public void update(String architecture,String msg) {
 		String clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
 		String content=null;
-		if(msg.equals(Communication_Protocol.READ)) {
-			if(readLock.tryLock()) {
-				content=Communication_Protocol.READING;
-			}
-			else {
-				content=Communication_Protocol.HAVE_READED;
-			}
-		}
-		else if(msg.equals(Communication_Protocol.CANCEL_READ)) {
-			readLock.unlock();
-			content=Communication_Protocol.CANCEL_READING;
-		}
-		else if(msg.equals(Communication_Protocol.WRITE)) {
-			if(writeLock.tryLock()) {
-				content=Communication_Protocol.WRITING;
-			}
-			else {
-				
-				content=Communication_Protocol.HAVE_WROTE;
-			}
 
-		}
-		else if(msg.equals(Communication_Protocol.CANCEL_WRITE)) {
+		switch (msg) {
+		case ReadWriteState_Protocol.READ:
+			if(readLock.tryLock()) 
+				content=ReadWriteState_Protocol.READING;
+			else
+				content=ReadWriteState_Protocol.HAVE_READED;
+			break;
+		case ReadWriteState_Protocol.CANCEL_READ:
+			readLock.unlock();
+			content=ReadWriteState_Protocol.CANCEL_READING;
+			break;
+		case ReadWriteState_Protocol.WRITE:
+			if(writeLock.tryLock())
+				content=ReadWriteState_Protocol.WRITING;
+			else 
+				content=ReadWriteState_Protocol.HAVE_WROTE;
+			break;
+		case ReadWriteState_Protocol.CANCEL_WRITE:
 			writeLock.unlock();
-			content=Communication_Protocol.CANCEL_WRITING;
+			content=ReadWriteState_Protocol.CANCEL_WRITING;
+			break;
+		default:
+			content="not have any protocol has used";
+			break;
 		}
 		msg=clientIP+Communication_Protocol.SPLIT_SIGN+content;
-		observer.update(msg);
+		notifyObserver(architecture,msg);
+	}
+	
+	public void notifyObserver(String architecture,String msg) {
+		 Observer observer=observers.get(architecture);
+		 observer.update(msg);
+		 observer.transport(msg);
 	}
 }

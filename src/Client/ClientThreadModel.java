@@ -14,7 +14,7 @@ import Protocol.Communication_Protocol;
 public class ClientThreadModel implements Runnable, Subject {
 
 	private Socket clientSocket = null;
-	private Map<Observer, String> observers = null;
+	private Map<String,Observer> observers = null;
 	private String IPAddress = "";
 	public int listenPort = 0;
 	private DataInputStream socketInput = null;
@@ -43,10 +43,22 @@ public class ClientThreadModel implements Runnable, Subject {
 
 	@Override
 	public void run() {
-		notifyObserver(Architecture_Protocol.View, "Client connect..." + "\r\n");
+		String architecture=Architecture_Protocol.Controller;
+		notifyObserver(architecture, "Client connect..." + "\r\n");
+		
 		receiveMsgBySocket();
 	}
 
+	@Override
+	public void attach(String architecture,Observer observer) {
+		observers.put(architecture,observer);
+	}
+
+	@Override
+	public void detach(String architecture) {
+		observers.remove(architecture);
+	}
+	
 	private void receiveMsgBySocket() {
 		try {
 			while ((inputMsg = socketInput.readUTF()) != null) {
@@ -59,77 +71,23 @@ public class ClientThreadModel implements Runnable, Subject {
 	}
 
 	private void processInputMsg(String inputMsg) {
-//		System.out.println(inputMsg);
 		String[] tokens = inputMsg.split("\\" + Communication_Protocol.SPLIT_SIGN);
-		String headProtocol = tokens[0];
+		String protocol = tokens[0];
 		String msg = tokens[1];
-		String rearProtocol = tokens[2];
 		String architecture = null;
 
-		if (headProtocol.startsWith(Communication_Protocol.M) && rearProtocol.endsWith(Communication_Protocol.M)) {
-			architecture = Architecture_Protocol.Model;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.V)
-				&& rearProtocol.endsWith(Communication_Protocol.V)) {
-			architecture = Architecture_Protocol.View;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.C)
-				&& rearProtocol.endsWith(Communication_Protocol.C)) {
-			architecture = Architecture_Protocol.Controller;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.M_V)
-				&& rearProtocol.endsWith(Communication_Protocol.M_V)) {
-			architecture = Architecture_Protocol.Model;
-			notifyObserver(architecture, msg);
-			architecture = Architecture_Protocol.View;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.M_C)
-				&& rearProtocol.endsWith(Communication_Protocol.M_C)) {
-			architecture = Architecture_Protocol.Model;
-			notifyObserver(architecture, msg);
-			architecture = Architecture_Protocol.Controller;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.V_C)
-				&& rearProtocol.endsWith(Communication_Protocol.V_C)) {
-			architecture = Architecture_Protocol.View;
-			notifyObserver(architecture, msg);
-			architecture = Architecture_Protocol.Controller;
-			notifyObserver(architecture, msg);
-		} else if (headProtocol.startsWith(Communication_Protocol.M_V_C)
-				&& rearProtocol.endsWith(Communication_Protocol.M_V_C)) {
-			architecture = Architecture_Protocol.Model;
-			notifyObserver(architecture, msg);
-			architecture = Architecture_Protocol.View;
-			notifyObserver(architecture, msg);
-			architecture = Architecture_Protocol.Controller;
-			notifyObserver(architecture, msg);
+		switch (protocol) {
+		case Communication_Protocol.CLIENT_CONTROLLER:
+			architecture=Architecture_Protocol.Controller;
+			 this.notifyObserver(architecture,msg);
+			break;
+		default:
+			break;
 		}
 	}
 
-	@Override
-	public void attach(Observer observer, String architecture) {
-		observers.put(observer, architecture);
-	}
-
-	@Override
-	public void detach(Observer observer) {
-		observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObserver(String action, String msg) {
-
-		for (Map.Entry<Observer, String> element : observers.entrySet()) {
-			Observer observer = element.getKey();
-			String architecture = element.getValue();
-
-			if (architecture == action) {
-				observer.update(msg);
-			} else if (architecture == action) {
-				observer.update(msg);
-			} else if (architecture == action) {
-				observer.update(msg);
-			}
-		}
+	public void notifyObserver(String architecture,String msg) {
+		 Observer observer=observers.get(architecture);
+		 observer.update(msg);
 	}
 }
