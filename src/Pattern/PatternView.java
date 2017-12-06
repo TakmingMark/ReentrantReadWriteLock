@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
 
-import Tools.TextView;
+import Tools.TextContent;
 
 public class PatternView {
 	public JFrame frame;
@@ -23,10 +23,10 @@ public class PatternView {
 	}	
 		
 	private void initView() {
-		frame=new JFrame(TextView.FrameName);
+		frame=new JFrame(TextContent.FrameName);
 		panel=new JPanel();
-		serverButton=new JButton(TextView.ServerButtonName);
-		clientButton=new JButton(TextView.ClientButtonName);
+		serverButton=new JButton(TextContent.ServerButtonName);
+		clientButton=new JButton(TextContent.ClientButtonName);
 		
 		frame.setLocation(300, 300);
 		
@@ -63,19 +63,18 @@ public class PatternView {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 	}
-	
-	public void setServerButtonListener(PatternAction severAction) {
-		serverButton.addActionListener(severAction);
-	}
-	
-	public void setClientButtonListner(PatternAction clientAction) {
-		clientButton.addActionListener(clientAction);
-	}
-	
+
 	public void close() {
-		
 		frame.setFocusable(false);
 		frame.setVisible(false);
 		frame.dispose();
+	}
+	
+	public JButton getServerButton() {
+		return serverButton;
+	}
+
+	public JButton getClientButton() {
+		return clientButton;
 	}
 }

@@ -8,8 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 
-import Observer.Observer;
-
 public class ServerView {
 	private JFrame jFrame;
 	private JPanel jPanel;
@@ -22,7 +20,7 @@ public class ServerView {
 	
 	public static ServerView getServerViewObject() {
 		return new ServerView();
-	}	
+	}
 		
 	private void initView() {
 		jFrame=new JFrame("Server");
@@ -34,6 +32,7 @@ public class ServerView {
 		
 		jTextArea.setFont(jTextArea.getFont().deriveFont(16f));
 		jTextArea.setEditable(false);
+		
 		jFrame.setLocation(300, 300);
 		
 		GroupLayout groupLayout=new GroupLayout(jPanel);

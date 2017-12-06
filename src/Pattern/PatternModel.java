@@ -1,6 +1,6 @@
 package Pattern;
 import Main.MainAcitivity;
-import Tools.TextView;
+import Tools.TextContent;
 
 public class PatternModel {
 	private MainAcitivity mainAcitivity;
@@ -13,16 +13,5 @@ public class PatternModel {
 	
 	public static PatternModel getPatternModelObject(MainAcitivity mainAcitivity,PatternView patternView) {
 		return new PatternModel(mainAcitivity,patternView);
-	}
-	
-	public void conversionController(String pattern) {
-		if(pattern.equals(TextView.ServerButtonName)) {
-			patternView.close();
-			mainAcitivity.initServer();
-		}
-		else if(pattern.equals(TextView.ClientButtonName)) {
-			patternView.close();
-			mainAcitivity.initClient();
-		}
 	}
 }

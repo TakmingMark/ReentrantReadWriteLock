@@ -3,10 +3,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import Observer.Observer;
 import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
-import Protocol.ReadWriteState_Protocol;
 
 public class ClientModel{
 
@@ -52,6 +50,4 @@ public class ClientModel{
 			e.printStackTrace();
 		}
 	}
-
-
 }

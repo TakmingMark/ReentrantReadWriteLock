@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -59,6 +58,13 @@ class ServerThreadModel implements Runnable,Subject{
 	public void detach(String architecture) {
 		observers.remove(architecture);
 	}
+	
+	@Override
+	public void notifyObserver(String architecture,String msg) {
+		 Observer observer=observers.get(architecture);
+		 observer.update(msg);
+		 observer.transport(msg);
+	}
 
 	private void receiveMsgBySocket() {
 		try{
@@ -83,7 +89,7 @@ class ServerThreadModel implements Runnable,Subject{
 		switch (protocol) {
 		case Communication_Protocol.SERVER_CONTROLLER:
 			architecture=Architecture_Protocol.Controller;
-			 this.update(architecture,msg);
+			 this.updateServerState(architecture,msg);
 			break;
 		default:
 			break;
@@ -91,7 +97,7 @@ class ServerThreadModel implements Runnable,Subject{
 		 
 	}
 
-	public void update(String architecture,String msg) {
+	public void updateServerState(String architecture,String msg) {
 		String clientIP=clientSocket.getInetAddress().toString()+":"+clientSocket.getPort();
 		String content=null;
 
@@ -122,11 +128,5 @@ class ServerThreadModel implements Runnable,Subject{
 		}
 		msg=clientIP+Communication_Protocol.SPLIT_SIGN+content;
 		notifyObserver(architecture,msg);
-	}
-	
-	public void notifyObserver(String architecture,String msg) {
-		 Observer observer=observers.get(architecture);
-		 observer.update(msg);
-		 observer.transport(msg);
 	}
 }

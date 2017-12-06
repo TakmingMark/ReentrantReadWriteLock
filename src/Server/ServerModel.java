@@ -3,16 +3,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDate;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
-
-import Observer.Observer;
 import Protocol.Architecture_Protocol;
 import Protocol.Communication_Protocol;
-import Tools.TextView;
+import Tools.TextContent;
 import Tools.ThreadPoolModel;
 import Tools.UserList;
 
@@ -52,7 +46,7 @@ public class ServerModel implements Runnable{
 	private void initServerSocket() {
 		 try{
 			 	serverSocket = new ServerSocket( ListenPort );
-			 	updateViewTextArea(TextView.ServerCreateSuccess);
+			 	updateTextView(TextContent.ServerCreateSuccess);
 		         
 	            while ( true ){
 	            	clientSocket = serverSocket.accept();
@@ -67,7 +61,7 @@ public class ServerModel implements Runnable{
 		 	}
 	    catch ( IOException e ){
 	        e.printStackTrace();
-	        updateViewTextArea(TextView.ServerCreateFail);
+	        updateTextView(TextContent.ServerCreateFail);
 	    }
 	    finally{
 	        if ( threadPool.isWorkThreadPoolExecutor()!=false )
@@ -82,14 +76,14 @@ public class ServerModel implements Runnable{
 	        }
 	}
 	
-	public void updateViewTextArea(String msg) {
+	private void updateTextView(String msg) {
 		serverController.update(msg);
 	}
 	
-	public void printUserList() {
-		updateViewTextArea("---------------------------------------------");
+	private void printUserList() {
+		updateTextView("---------------------------------------------");
 		for(String element:userList.getIPList()) {
-			updateViewTextArea(element+":"+userList.getOutPutStreamByIP(element));
+			updateTextView(element+":"+userList.getOutPutStreamByIP(element));
 		}
 	}
 	

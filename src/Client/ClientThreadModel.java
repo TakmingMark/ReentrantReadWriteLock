@@ -15,7 +15,6 @@ public class ClientThreadModel implements Runnable, Subject {
 
 	private Socket clientSocket = null;
 	private Map<String,Observer> observers = null;
-	private String IPAddress = "";
 	public int listenPort = 0;
 	private DataInputStream socketInput = null;
 	private String inputMsg = "";
@@ -31,7 +30,6 @@ public class ClientThreadModel implements Runnable, Subject {
 
 	private void initClientThreadModel() {
 		observers = new HashMap<>();
-		IPAddress = clientSocket.getLocalAddress().getHostAddress();
 		listenPort = clientSocket.getPort();
 		try {
 			socketInput = new DataInputStream(clientSocket.getInputStream());
@@ -59,6 +57,12 @@ public class ClientThreadModel implements Runnable, Subject {
 		observers.remove(architecture);
 	}
 	
+	@Override
+	public void notifyObserver(String architecture,String msg) {
+		 Observer observer=observers.get(architecture);
+		 observer.update(msg);
+	}
+	
 	private void receiveMsgBySocket() {
 		try {
 			while ((inputMsg = socketInput.readUTF()) != null) {
@@ -84,10 +88,5 @@ public class ClientThreadModel implements Runnable, Subject {
 		default:
 			break;
 		}
-	}
-
-	public void notifyObserver(String architecture,String msg) {
-		 Observer observer=observers.get(architecture);
-		 observer.update(msg);
 	}
 }

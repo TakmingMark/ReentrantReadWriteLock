@@ -1,6 +1,4 @@
 package Pattern;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import Main.MainAcitivity;
 
@@ -20,23 +18,17 @@ public class PatternController {
 	}
 	
 	private void initPatternController() {
-		PatternAction patternAction=new PatternAction(patternModel);
-		patternView.setClientButtonListner(patternAction);
-		patternView.setServerButtonListener(patternAction);
+		patternView.getServerButton().addActionListener(e -> pressServerButton());
+		patternView.getClientButton().addActionListener(e ->pressClientButton());
 	}
 	
-}
-class PatternAction implements ActionListener{
-
-	private PatternModel patternModel;
-	
-	public PatternAction(PatternModel patternModel) {
-		this.patternModel=patternModel;
+	private void pressServerButton() {
+		patternView.close();
+		mainAcitivity.initServer();
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		patternModel.conversionController(e.getActionCommand());
+	private void pressClientButton() {
+		patternView.close();
+		mainAcitivity.initClient();
 	}
-	
 }

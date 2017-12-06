@@ -1,9 +1,5 @@
 package Client;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import Observer.Observer;
-import Protocol.Communication_Protocol;
 import Protocol.ReadWriteState_Protocol;
 
 public class ClientController implements Observer {
@@ -22,6 +18,15 @@ public class ClientController implements Observer {
 		clientView.getCancelReadButton().addActionListener(e -> pressCancelReadButton());
 		clientView.getWriteButton().addActionListener(e -> pressWriteButton());
 		clientView.getCancelWriteButton().addActionListener(e -> pressCancelWriteButton());
+	}
+	
+	@Override
+	public void update(String msg) {
+		clientView.update(msg);
+	}
+
+	@Override
+	public void transport(String msg) {
 	}
 	
 	private void pressReadButton() {
@@ -43,27 +48,13 @@ public class ClientController implements Observer {
 		clientView.setCancelWriteButtonStatus();
 		clientModel.transmitMsgBySocket(ReadWriteState_Protocol.CANCEL_WRITE);
 	}
-	@Override
-	public void update(String msg) {
-		clientView.update(msg);
-	}
-
-	@Override
-	public void transport(String msg) {
-		// TODO Auto-generated method stub
-	}
 	
 	public void setClientView(ClientView clientView) {
 		this.clientView = clientView;
 	}
 
-
 	public void setClientModel(ClientModel clientModel) {
 		this.clientModel = clientModel;
 	}
-
-	
-	
-	
 }
 

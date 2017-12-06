@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 
-import Observer.Observer;
 import Protocol.ReadWriteState_Protocol;
 
 
@@ -137,31 +136,15 @@ public class ClientView{
 		return readButton;
 	}
 
-	public void setReadButton(JButton readButton) {
-		this.readButton = readButton;
-	}
-
 	public JButton getCancelReadButton() {
 		return cancelReadButton;
-	}
-
-	public void setCancelReadButton(JButton cancelReadButton) {
-		this.cancelReadButton = cancelReadButton;
 	}
 
 	public JButton getWriteButton() {
 		return writeButton;
 	}
 
-	public void setWriteButton(JButton writeButton) {
-		this.writeButton = writeButton;
-	}
-
 	public JButton getCancelWriteButton() {
 		return cancelWriteButton;
-	}
-
-	public void setCancelWriteButton(JButton cancelWriteButton) {
-		this.cancelWriteButton = cancelWriteButton;
 	}
 }

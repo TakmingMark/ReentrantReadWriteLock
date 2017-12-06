@@ -1,6 +1,6 @@
 package Tools;
 
-public interface TextView {
+public interface TextContent {
 	final String FrameName="Pattern Option";
 	final String ServerButtonName="Server";
 	final String ClientButtonName="Client";
