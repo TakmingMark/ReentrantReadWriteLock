@@ -7,11 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+import javax.swing.text.DefaultCaret;
 
 public class ServerView {
 	private JFrame jFrame;
 	private JPanel jPanel;
 	private JTextArea jTextArea;
+	private DefaultCaret caret;
 	private JScrollPane jScrollPane;
 	
 	private ServerView() {	
@@ -26,12 +28,15 @@ public class ServerView {
 		jFrame=new JFrame("Server");
 		jPanel=new JPanel();
 		jTextArea=new JTextArea(13,23);
+		caret = (DefaultCaret)jTextArea.getCaret();
 		jScrollPane=new JScrollPane(jTextArea);
 
 		jPanel.setPreferredSize(new Dimension(350, 300));
 		
 		jTextArea.setFont(jTextArea.getFont().deriveFont(16f));
 		jTextArea.setEditable(false);
+		
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		
 		jFrame.setLocation(300, 300);
 		

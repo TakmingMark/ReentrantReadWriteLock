@@ -6,18 +6,15 @@ public class PatternController {
 	private MainAcitivity mainAcitivity;
 	private PatternView patternView;
 	private PatternModel patternModel;
-	
-	private PatternController(PatternView patternView,PatternModel patternModel) {
-		this.patternView=patternView;
-		this.patternModel=patternModel;
-		initPatternController();
+
+	private PatternController() {
 	}
 	
-	public static PatternController getPatternControllerObject(PatternView patternView,PatternModel patternModel) {
-		return new PatternController(patternView,patternModel);
+	public static PatternController getPatternControllerObject() {
+		return new PatternController();
 	}
 	
-	private void initPatternController() {
+	public void initPatternController() {
 		patternView.getServerButton().addActionListener(e -> pressServerButton());
 		patternView.getClientButton().addActionListener(e ->pressClientButton());
 	}
@@ -30,5 +27,17 @@ public class PatternController {
 	private void pressClientButton() {
 		patternView.close();
 		mainAcitivity.initClient();
+	}
+
+	public void setMainAcitivity(MainAcitivity mainAcitivity) {
+		this.mainAcitivity = mainAcitivity;
+	}
+
+	public void setPatternView(PatternView patternView) {
+		this.patternView = patternView;
+	}
+
+	public void setPatternModel(PatternModel patternModel) {
+		this.patternModel = patternModel;
 	}
 }

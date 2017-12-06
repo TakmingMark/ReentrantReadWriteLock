@@ -18,9 +18,14 @@ public class MainAcitivity {
 	}
 	
 	public void initPattern() {
+		PatternController patternController=PatternController.getPatternControllerObject();
 		PatternView patternView=PatternView.getPatternViewObject();
-		PatternModel patternModel=PatternModel.getPatternModelObject(this,patternView);
-		PatternController patternController=PatternController.getPatternControllerObject(patternView, patternModel);
+		PatternModel patternModel=PatternModel.getPatternModelObject(patternController);
+		
+		patternController.setMainAcitivity(this);
+		patternController.setPatternModel(patternModel);
+		patternController.setPatternView(patternView);
+		patternController.initPatternController();
 	}
 	
 	public void initServer() {

@@ -6,13 +6,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
+import javax.swing.text.DefaultCaret;
 
 import Tools.TextContent;
 
 public class PatternView {
-	public JFrame frame;
-	public JPanel panel;
-	public JButton serverButton,clientButton;
+	private JFrame frame;
+	private JPanel panel;
+	private JButton serverButton,clientButton;
 	
 	private PatternView() {	
 		initView();

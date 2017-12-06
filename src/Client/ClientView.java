@@ -5,17 +5,21 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+import javax.swing.text.DefaultCaret;
 
 import Protocol.ReadWriteState_Protocol;
 
 
 public class ClientView{
-	public JFrame jFrame;
-	public JPanel jPanel;
-	public JTextArea jTextArea;
-	public JButton readButton,cancelReadButton,writeButton,cancelWriteButton;
+	private JFrame jFrame;
+	private JPanel jPanel;
+	private JTextArea jTextArea;
+	private JButton readButton,cancelReadButton,writeButton,cancelWriteButton;
+	private DefaultCaret caret;
+	private JScrollPane jScrollPane;
 	
 	private ClientView() {	
 		initView();
@@ -26,13 +30,20 @@ public class ClientView{
 	}
 
 	private void initView() {
-		jFrame=new JFrame("ReentrantReakWriteLock");
+		jFrame=new JFrame("Server");
 		jPanel=new JPanel();
-		jTextArea=new JTextArea();
+		jTextArea=new JTextArea(13,23);
+		caret = (DefaultCaret)jTextArea.getCaret();
+		jScrollPane=new JScrollPane(jTextArea);
 		readButton=new JButton("Read");
 		cancelReadButton=new JButton("CancelRead");
 		writeButton=new JButton("Write");
 		cancelWriteButton=new JButton("CancelWrite");
+	
+		jTextArea.setFont(jTextArea.getFont().deriveFont(16f));
+		jTextArea.setEditable(false);
+		
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		
 		cancelReadButton.setEnabled(false);
 		cancelWriteButton.setEnabled(false);
@@ -49,7 +60,7 @@ public class ClientView{
 							.addGroup(groupLayout.createSequentialGroup()
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 						                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(jTextArea,0,300,GroupLayout.PREFERRED_SIZE)
+									.addComponent(jScrollPane,0,300,GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 						                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									)
@@ -76,7 +87,7 @@ public class ClientView{
 				groupLayout.createSequentialGroup()
 					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
 		                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(jTextArea,0,200,GroupLayout.PREFERRED_SIZE)
+					.addComponent(jScrollPane,0,200,GroupLayout.PREFERRED_SIZE)
 					.addGap(15)
 					.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
 							.addComponent(readButton,0,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
