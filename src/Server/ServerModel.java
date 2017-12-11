@@ -46,6 +46,7 @@ public class ServerModel implements Runnable{
 	private void initServerSocket() {
 		 try{
 			 	serverSocket = new ServerSocket( ListenPort );
+			 	System.out.print(serverSocket.getInetAddress().getHostAddress());
 			 	updateTextView(TextContent.ServerCreateSuccess);
 		         
 	            while ( true ){

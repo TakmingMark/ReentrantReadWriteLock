@@ -47,7 +47,7 @@ public class MainAcitivity {
 		ClientController clientController=ClientController.getClientControllerObject();
 		ClientView clientView=ClientView.getClientViewObject();
 		ClientThreadModel clientThreadModel=null;
-		ClientModel clientModel=ClientModel.getClientModelObject(clientController,"163.19.227.78",5050);
+		ClientModel clientModel=ClientModel.getClientModelObject(clientController,"172.0.0.1",5050);
 	
 		clientController.setClientView(clientView);
 		clientController.setClientModel(clientModel);

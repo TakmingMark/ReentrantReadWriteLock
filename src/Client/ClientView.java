@@ -30,7 +30,7 @@ public class ClientView{
 	}
 
 	private void initView() {
-		jFrame=new JFrame("Server");
+		jFrame=new JFrame("Client");
 		jPanel=new JPanel();
 		jTextArea=new JTextArea(13,23);
 		caret = (DefaultCaret)jTextArea.getCaret();
